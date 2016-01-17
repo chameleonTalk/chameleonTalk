@@ -1,19 +1,31 @@
-<!DOCTYPE html>
+<!DOCTYPE>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
+	<head>
+		<meta charset="UTF-8">
+		<base href="/">
 
-    <title>Chameleon Talk</title>
+		<title>Chameleon Talk</title>
 
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular-resource.min.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular-route.min.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular-cookies.js"></script>
+		<script src="js/ui-bootstrap-tpls-0.14.3.min.js"></script>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.js"></script>
-</head>
-<body>
-    <h1>Chameleon Talk</h1>
-    <form>
-        <input type="text" name="message">
-        <input type="submit" value="Send">
-    </form>
-</body>
+		<script src="js/app.js"></script>
+
+	</head>
+	<body ng-app="app">
+		<nav class="navbar navbar-inverse navbar-static-top">
+			<div class="navbar-header">
+				<h4 class="navbar-brand" href="#">Chameleon Talk</a>
+			</div>
+		</nav>
+
+        <form>
+            <input type="text" name="message">
+            <input type="submit" value="Send">
+        </form>
+	</body>
 </html>

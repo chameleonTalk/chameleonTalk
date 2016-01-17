@@ -1,0 +1,30 @@
+{
+  "name": "susansun",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chameleonTalk/chameleonTalk.git"
+  },
+  "keywords": [
+    "translate",
+    "chameleon",
+    "talk",
+    "chat"
+  ],
+  "author": "ChameleonTalk",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/chameleonTalk/chameleonTalk/issues"
+  },
+  "homepage": "https://github.com/chameleonTalk/chameleonTalk#readme",
+  "dependencies": {
+    "express": "^4.13.3",
+    "socket.io": "^1.4.4",
+    "superagent": "^1.6.1"
+  }
+}
