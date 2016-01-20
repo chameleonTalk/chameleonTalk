@@ -3,8 +3,8 @@ angular.module('app', ['ngRoute', 'ngResource'])
     function ($routeProvider, $locationProvider) {
       $routeProvider
         .when('/', {
-          templateUrl: 'views/index.html'//,
-          //controller: 'chatController'
+          templateUrl: 'views/index.html',
+          controller: 'ChatController'
         })
         .otherwise({
           redirectTo: '/'
