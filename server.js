@@ -1,18 +1,30 @@
 var express = require('express');
 var app = express();
-var server = require('http').Server(app);
+// Taken from the socket.io "Get Started"
+var http = require('http').Server(app);
+var io = require('socket.io')(http);
 
 app.use(express.static('./client'));
-app.use(express.static('public'));
+app.use(express.static('./public'));
 
 require('./api/routes')(app)
 
 app.get('*', function (req, res) {
-	res.sendFile('/client/views/index.html', { root: __dirname });
+	res.sendFile('./client/views/index.html', { root: __dirname });
 });
 
-var io = require('socket.io')(server);
+// Taken from the socket.io "Get Started"
+io.on('connection', function(socket) {
+	console.log('A user connected.');
+	socket.on('disconnect', function() {
+		console.log('A user disconnected.');
+	});
 
-app.listen(9091, function () {
-	console.log('Server is running on 9091.')
+	// socket.on('chat message', function(msg) {
+	// 	console.log('Message: ' + msg);
+	// });
+});
+
+http.listen(8080, function () {
+	console.log('Server is running on 8080.');
 });
