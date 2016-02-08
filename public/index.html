@@ -1,0 +1,37 @@
+<!DOCTYPE>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<base href="/">
+
+		<title>Chameleon Talk</title>
+
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.js"></script>
+
+    <link rel="stylesheet" href="style.css">
+		<!-- Taken from the socket.io "Get Started" -->
+		<script src="/socket.io/socket.io.js"></script>
+		<!-- <script src="http://code.jquery.com/jquery-1.11.1.js"></script> -->
+		<script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+  		<script src="/main.js"></script>
+	</head>
+	<body>
+  <ul class="pages">
+    <li class="chat page">
+      <div class="chatArea">
+        <ul class="messages"></ul>
+      </div>
+      <input class="inputMessage" placeholder="Type here..."/>
+    </li>
+    <li class="login page">
+      <div class="form">
+        <h3 class="title">Welcome to ChameleonTalk</h3>
+        <h3 class="title">What's your nickname?</h3>
+        <input class="usernameInput" type="text" maxlength="14" />
+      </div>
+    </li>
+  </ul>
+
+</body>
+</html>
