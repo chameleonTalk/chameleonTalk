@@ -79,6 +79,7 @@ $(function() {
         message: message
       });
       // tell server to execute 'new message' and send along one parameter
+      console.log(message);
       socket.emit('new message', message);
     }
   }
