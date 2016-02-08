@@ -4,6 +4,7 @@ var app = express();
 var server = require('http').createServer(app);
 var io = require('socket.io')();
 var port = process.env.PORT || 3000;
+var superagent = require('superagent');
 
 io.attach(server);
 
@@ -75,3 +76,22 @@ io.on('connection', function (socket) {
     }
   });
 });
+
+function doTranslation(sourceLang, targetLang, sourceText, callback) {
+    superagent
+        .get('https://translate.googleapis.com/translate_a/single?client=gtx&sl='
+             + sourceLang + "&tl=" + targetLang + "&dt=t&q=" + sourceText)
+        .end(function (err, res) {
+            var rawStr = err.rawResponse;
+            var str = rawStr.replace(/,,/g, ",0,");
+            str = str.replace(/,,/g, ",0,");
+
+            var result = JSON.parse(str);
+
+            return callback(result[0][0][0]);
+        });
+
+    console.log('Source Text: ' + sourceText);
+}
+
+doTranslation('auto', 'en', 'Te gustaria comer conmigo?', function(translatedText) { console.log ('Translated Text: ' + translatedText); });

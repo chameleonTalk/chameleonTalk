@@ -51,21 +51,6 @@ $(function() {
     }
   }
 
-  function doTranslation(sourceLang, targetLang, sourceText, callback) {
-      superagent
-          .get('https://translate.googleapis.com/translate_a/single?client=gtx&sl='
-               + sourceLang + "&tl=" + targetLang + "&dt=t&q=" + sourceText)
-          .end(function (err, res) {
-              var rawStr = err.rawResponse;
-              var str = rawStr.replace(/,,/g, ",0,");
-              str = str.replace(/,,/g, ",0,");
-
-              var result = JSON.parse(str);
-
-              return callback(result[0][0][0]);
-          });
-  }
-
   // Sends a chat message
   function sendMessage () {
     var message = $inputMessage.val();
