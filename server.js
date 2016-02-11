@@ -24,14 +24,11 @@ io.on('connection', function (socket) {
 
   // when the client emits 'new message', this listens and executes
   socket.on('new message', function (data) {
-    // we tell the client to execute 'new message'
-	//var tt = doTranslation('auto', 'en', 'Te gustaria comer conmigo?', function(translatedText) { console.log ('Translated Text: ' + translatedText); return translatedText });
-	
+  
 	var sourceLang='auto';
 	var targetLang='en'; 
 	var sourceText='Te gustaria comer conmigo?';
 	
-	//--------
     superagent
         .get('https://translate.googleapis.com/translate_a/single?client=gtx&sl='
              + sourceLang + "&tl=" + targetLang + "&dt=t&q=" + sourceText)
@@ -44,11 +41,9 @@ io.on('connection', function (socket) {
             var result = JSON.parse(str);
 
 			socket.broadcast.emit('new message', {
-      username: socket.username,
-      message: result[0][0][0]
-    });
-
-          //  return callback(result[0][0][0]);
+				username: socket.username,
+				message: result[0][0][0]
+			});
         });	
   });
 
@@ -98,7 +93,7 @@ io.on('connection', function (socket) {
   });
 });
 
-
+/*
 
 function doTranslation2(sourceLang, targetLang, sourceText) {
 var tt;
@@ -129,3 +124,4 @@ return tt;
 var test = doTranslation2('auto', 'en', 'Te gustaria comer conmigo?');
 //test = JSON.parse(test);
 	console.log('test = '+test);
+*/
