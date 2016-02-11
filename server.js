@@ -92,36 +92,3 @@ io.on('connection', function (socket) {
     }
   });
 });
-
-/*
-
-function doTranslation2(sourceLang, targetLang, sourceText) {
-var tt;
-    superagent
-        .get('https://translate.googleapis.com/translate_a/single?client=gtx&sl='
-             + sourceLang + "&tl=" + targetLang + "&dt=t&q=" + sourceText)
-        .end(function (err, res) {
-            var rawStr = err.rawResponse;
-            var str = rawStr.replace(/,,/g, ",0,");
-            str = str.replace(/,,/g, ",0,");
-
-            var result = JSON.parse(str);
-			    console.log('result: ' + result[0][0][0]);
-				
-			var parsedStr = String(result[0][0][0]);
-				//console.log('str: ' + JSON.stringify(result[0][0][0]));
-				console.log('data taype: ' + typeof(result[0][0][0]));
-         
-		 tt = JSON.stringify(result[0][0][0]);
-        });
-return tt;
-}
-
-
-
-
-
-var test = doTranslation2('auto', 'en', 'Te gustaria comer conmigo?');
-//test = JSON.parse(test);
-	console.log('test = '+test);
-*/
