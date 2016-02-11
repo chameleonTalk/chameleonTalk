@@ -19,15 +19,41 @@ app.use(express.static(__dirname + '/public'));
 
 var numUsers = 0;
 
+var sourceLang='auto';
+var targetLang='en'; 
+var sourceText='Te gustaria comer conmigo?';
+
+
+
+
+function doGet(e) {
+ 
+  var sourceText = ''
+  if (e.parameter.q){
+    sourceText = e.parameter.q;
+  }
+  
+  var sourceLang = 'auto';
+  if (e.parameter.source){
+    sourceLang = e.parameter.source;
+  }
+ 
+  var targetLang = 'ja';
+  if (e.parameter.target){
+    targetLang = e.parameter.target;
+  }
+}
+
+
+
 io.on('connection', function (socket) {
   var addedUser = false;
 
   // when the client emits 'new message', this listens and executes
   socket.on('new message', function (data) {
   
-	var sourceLang='auto';
-	var targetLang='en'; 
-	var sourceText='Te gustaria comer conmigo?';
+
+	sourceText = data;
 	
     superagent
         .get('https://translate.googleapis.com/translate_a/single?client=gtx&sl='
@@ -42,17 +68,23 @@ io.on('connection', function (socket) {
 
 			socket.broadcast.emit('new message', {
 				username: socket.username,
-				message: result[0][0][0]
+				message: 'translated: '+result[0][0][0] + '\noriginal: ' + data
 			});
         });	
   });
 
+  
+
+
+  
+  
   // when the client emits 'add user', this listens and executes
   socket.on('add user', function (username) {
     if (addedUser) return;
 
     // we store the username in the socket session for this client
     socket.username = username;
+	
     ++numUsers;
     addedUser = true;
     socket.emit('login', {
