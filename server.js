@@ -25,10 +25,31 @@ io.on('connection', function (socket) {
   // when the client emits 'new message', this listens and executes
   socket.on('new message', function (data) {
     // we tell the client to execute 'new message'
-    socket.broadcast.emit('new message', {
+	//var tt = doTranslation('auto', 'en', 'Te gustaria comer conmigo?', function(translatedText) { console.log ('Translated Text: ' + translatedText); return translatedText });
+	
+	var sourceLang='auto';
+	var targetLang='en'; 
+	var sourceText='Te gustaria comer conmigo?';
+	
+	//--------
+    superagent
+        .get('https://translate.googleapis.com/translate_a/single?client=gtx&sl='
+             + sourceLang + "&tl=" + targetLang + "&dt=t&q=" + sourceText)
+        .end(function (err, res) {
+            var rawStr = err.rawResponse;
+			
+            var str = rawStr.replace(/,,/g, ",0,");
+            str = str.replace(/,,/g, ",0,");
+
+            var result = JSON.parse(str);
+
+			socket.broadcast.emit('new message', {
       username: socket.username,
-      message: data
+      message: result[0][0][0]
     });
+
+          //  return callback(result[0][0][0]);
+        });	
   });
 
   // when the client emits 'add user', this listens and executes
@@ -77,7 +98,10 @@ io.on('connection', function (socket) {
   });
 });
 
-function doTranslation(sourceLang, targetLang, sourceText, callback) {
+
+
+function doTranslation2(sourceLang, targetLang, sourceText) {
+var tt;
     superagent
         .get('https://translate.googleapis.com/translate_a/single?client=gtx&sl='
              + sourceLang + "&tl=" + targetLang + "&dt=t&q=" + sourceText)
@@ -87,11 +111,21 @@ function doTranslation(sourceLang, targetLang, sourceText, callback) {
             str = str.replace(/,,/g, ",0,");
 
             var result = JSON.parse(str);
-
-            return callback(result[0][0][0]);
+			    console.log('result: ' + result[0][0][0]);
+				
+			var parsedStr = String(result[0][0][0]);
+				//console.log('str: ' + JSON.stringify(result[0][0][0]));
+				console.log('data taype: ' + typeof(result[0][0][0]));
+         
+		 tt = JSON.stringify(result[0][0][0]);
         });
-
-    console.log('Source Text: ' + sourceText);
+return tt;
 }
 
-doTranslation('auto', 'en', 'Te gustaria comer conmigo?', function(translatedText) { console.log ('Translated Text: ' + translatedText); });
+
+
+
+
+var test = doTranslation2('auto', 'en', 'Te gustaria comer conmigo?');
+//test = JSON.parse(test);
+	console.log('test = '+test);

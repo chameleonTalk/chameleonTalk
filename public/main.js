@@ -263,4 +263,9 @@ $(function() {
   socket.on('stop typing', function (data) {
     removeChatTyping(data);
   });
+  
+  
+  
+  
+  
 });
