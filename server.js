@@ -19,24 +19,73 @@ app.use(express.static(__dirname + '/public'));
 
 var numUsers = 0;
 
+var sourceLang='auto';
+//var targetLang='en'; 
+var targetLang='es'; 
+var sourceText='Te gustaria comer conmigo?';
+
+
+
+/*
+function doGet(e) {
+ 
+  var sourceText = ''
+  if (e.parameter.q){
+    sourceText = e.parameter.q;
+  }
+  
+  var sourceLang = 'auto';
+  if (e.parameter.source){
+    sourceLang = e.parameter.source;
+  }
+ 
+  var targetLang = 'ja';
+  if (e.parameter.target){
+    targetLang = e.parameter.target;
+  }
+}
+*/
+
+
 io.on('connection', function (socket) {
   var addedUser = false;
 
   // when the client emits 'new message', this listens and executes
   socket.on('new message', function (data) {
-    // we tell the client to execute 'new message'
-    socket.broadcast.emit('new message', {
-      username: socket.username,
-      message: data
-    });
+  
+
+	sourceText = data;
+	targetLang='socket.userlanguage'; 
+	
+    superagent
+        .get('https://translate.googleapis.com/translate_a/single?client=gtx&sl='
+             + sourceLang + "&tl=" + targetLang + "&dt=t&q=" + sourceText)
+        .end(function (err, res) {
+            var rawStr = err.rawResponse;
+			
+            var str = rawStr.replace(/,,/g, ",0,");
+            str = str.replace(/,,/g, ",0,");
+
+            var result = JSON.parse(str);
+
+			socket.broadcast.emit('new message', {
+				username: socket.username,
+				message: '[translated]: '+result[0][0][0] + '\n[original]: ' + data
+			});
+        });	
   });
 
+
+  
   // when the client emits 'add user', this listens and executes
-  socket.on('add user', function (username) {
+  socket.on('add user', function (username, language) {
     if (addedUser) return;
 
     // we store the username in the socket session for this client
     socket.username = username;
+	socket.userlanguage = language;
+	
+	console.log('user name, user language: ' + socket.username + ', ' + socket.userlanguage)
     ++numUsers;
     addedUser = true;
     socket.emit('login', {
@@ -76,22 +125,3 @@ io.on('connection', function (socket) {
     }
   });
 });
-
-function doTranslation(sourceLang, targetLang, sourceText, callback) {
-    superagent
-        .get('https://translate.googleapis.com/translate_a/single?client=gtx&sl='
-             + sourceLang + "&tl=" + targetLang + "&dt=t&q=" + sourceText)
-        .end(function (err, res) {
-            var rawStr = err.rawResponse;
-            var str = rawStr.replace(/,,/g, ",0,");
-            str = str.replace(/,,/g, ",0,");
-
-            var result = JSON.parse(str);
-
-            return callback(result[0][0][0]);
-        });
-
-    console.log('Source Text: ' + sourceText);
-}
-
-doTranslation('auto', 'en', 'Te gustaria comer conmigo?', function(translatedText) { console.log ('Translated Text: ' + translatedText); });

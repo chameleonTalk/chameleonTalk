@@ -10,6 +10,7 @@ $(function() {
   // Initialize variables
   var $window = $(window);
   var $usernameInput = $('.usernameInput'); // Input for username
+  var $languageInput = $('.languageInput');
   var $messages = $('.messages'); // Messages area
   var $inputMessage = $('.inputMessage'); // Input message input box
 
@@ -18,6 +19,8 @@ $(function() {
 
   // Prompt for setting a username
   var username;
+  var language;
+  //var languages[];
   var connected = false;
   var typing = false;
   var lastTypingTime;
@@ -38,7 +41,9 @@ $(function() {
   // Sets the client's username
   function setUsername () {
     username = cleanInput($usernameInput.val().trim());
-
+    language = $languageInput.val();
+	
+	
     // If the username is valid
     if (username) {
       $loginPage.fadeOut();
@@ -47,9 +52,11 @@ $(function() {
       $currentInput = $inputMessage.focus();
 
       // Tell the server your username
-      socket.emit('add user', username);
+     // socket.emit('add user', username, userlanguage);
+	  socket.emit('add user', username,language);
     }
   }
+  
 
   // Sends a chat message
   function sendMessage () {
@@ -263,4 +270,9 @@ $(function() {
   socket.on('stop typing', function (data) {
     removeChatTyping(data);
   });
+  
+  
+  
+  
+  
 });
