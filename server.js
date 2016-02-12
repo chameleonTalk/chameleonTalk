@@ -20,12 +20,13 @@ app.use(express.static(__dirname + '/public'));
 var numUsers = 0;
 
 var sourceLang='auto';
-var targetLang='en'; 
+//var targetLang='en'; 
+var targetLang='socket.userlanguage'; 
 var sourceText='Te gustaria comer conmigo?';
 
 
 
-
+/*
 function doGet(e) {
  
   var sourceText = ''
@@ -43,7 +44,7 @@ function doGet(e) {
     targetLang = e.parameter.target;
   }
 }
-
+*/
 
 
 io.on('connection', function (socket) {
@@ -68,23 +69,22 @@ io.on('connection', function (socket) {
 
 			socket.broadcast.emit('new message', {
 				username: socket.username,
-				message: 'translated: '+result[0][0][0] + '\noriginal: ' + data
+				message: '[translated]: '+result[0][0][0] + '\n[original]: ' + data
 			});
         });	
   });
 
-  
 
-
-  
   
   // when the client emits 'add user', this listens and executes
-  socket.on('add user', function (username) {
+  socket.on('add user', function (username, language) {
     if (addedUser) return;
 
     // we store the username in the socket session for this client
     socket.username = username;
+	socket.userlanguage = language;
 	
+	console.log('user name, user language: ' + socket.username + ', ' + socket.userlanguage)
     ++numUsers;
     addedUser = true;
     socket.emit('login', {
