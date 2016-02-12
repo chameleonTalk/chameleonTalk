@@ -20,6 +20,7 @@ $(function() {
   // Prompt for setting a username
   var username;
   var language;
+  //var languages[];
   var connected = false;
   var typing = false;
   var lastTypingTime;
@@ -41,6 +42,7 @@ $(function() {
   function setUsername () {
     username = cleanInput($usernameInput.val().trim());
     language = $languageInput.val();
+	
 	
     // If the username is valid
     if (username) {

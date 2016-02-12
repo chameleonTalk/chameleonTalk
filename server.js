@@ -21,7 +21,7 @@ var numUsers = 0;
 
 var sourceLang='auto';
 //var targetLang='en'; 
-var targetLang='socket.userlanguage'; 
+var targetLang='es'; 
 var sourceText='Te gustaria comer conmigo?';
 
 
@@ -55,6 +55,7 @@ io.on('connection', function (socket) {
   
 
 	sourceText = data;
+	targetLang='socket.userlanguage'; 
 	
     superagent
         .get('https://translate.googleapis.com/translate_a/single?client=gtx&sl='
