@@ -20,7 +20,7 @@ app.use(express.static(__dirname + '/public'));
 var numUsers = 0;
 
 var users = [];
-var targetLang='en'; 
+var targetLang; 
 var sourceText;
 
 io.on('connection', function (socket) {
