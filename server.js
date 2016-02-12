@@ -19,73 +19,52 @@ app.use(express.static(__dirname + '/public'));
 
 var numUsers = 0;
 
-var sourceLang='auto';
-//var targetLang='en'; 
-var targetLang='es'; 
-var sourceText='Te gustaria comer conmigo?';
-
-
-
-/*
-function doGet(e) {
- 
-  var sourceText = ''
-  if (e.parameter.q){
-    sourceText = e.parameter.q;
-  }
-  
-  var sourceLang = 'auto';
-  if (e.parameter.source){
-    sourceLang = e.parameter.source;
-  }
- 
-  var targetLang = 'ja';
-  if (e.parameter.target){
-    targetLang = e.parameter.target;
-  }
-}
-*/
-
+var users = [];
 
 io.on('connection', function (socket) {
   var addedUser = false;
 
   // when the client emits 'new message', this listens and executes
   socket.on('new message', function (data) {
-  
 
 	sourceText = data;
-	targetLang='socket.userlanguage'; 
-	
-    superagent
-        .get('https://translate.googleapis.com/translate_a/single?client=gtx&sl='
-             + sourceLang + "&tl=" + targetLang + "&dt=t&q=" + sourceText)
-        .end(function (err, res) {
-            var rawStr = err.rawResponse;
-			
-            var str = rawStr.replace(/,,/g, ",0,");
-            str = str.replace(/,,/g, ",0,");
 
-            var result = JSON.parse(str);
+  for (user in users) {
+    if(user.username == socket.username){
+      targetLang=user.language; 
+    }
+  }
 
-			socket.broadcast.emit('new message', {
-				username: socket.username,
-				message: '[translated]: '+result[0][0][0] + '\n[original]: ' + data
-			});
-        });	
+  superagent
+      .get('https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=' + targetLang + "&dt=t&q=" + sourceText)
+      .end(function (err, res) {
+          var rawStr = err.rawResponse;
+		
+          var str = rawStr.replace(/,,/g, ",0,");
+          str = str.replace(/,,/g, ",0,");
+
+          var result = JSON.parse(str);
+
+      		socket.broadcast.emit('new message', {
+      			username: socket.username,
+      			message: '[translated]: '+result[0][0][0] + '\n[original]: ' + data
+      		});
+      });	
   });
 
-
-  
   // when the client emits 'add user', this listens and executes
   socket.on('add user', function (username, language) {
     if (addedUser) return;
 
-    // we store the username in the socket session for this client
+      // we store the username in the socket session for this client
     socket.username = username;
-	socket.userlanguage = language;
-	
-	console.log('user name, user language: ' + socket.username + ', ' + socket.userlanguage)
+  	socket.userlanguage = language;
+
+    var user = { username: socket.username, language : socket.userlanguage};
+
+    users.push(user);
+  	
+  	console.log('user name, user language: ' + socket.username + ', ' + socket.userlanguage)
     ++numUsers;
     addedUser = true;
     socket.emit('login', {
@@ -95,7 +74,7 @@ io.on('connection', function (socket) {
     socket.broadcast.emit('user joined', {
       username: socket.username,
       numUsers: numUsers
-    });
+      });
   });
 
   // when the client emits 'typing', we broadcast it to others
