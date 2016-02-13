@@ -5,7 +5,7 @@ var server = require('http').createServer(app);
 var io = require('socket.io')();
 var port = process.env.PORT || 3000;
 var superagent = require('superagent');
-var bodyParser = require('body-parser');
+// var bodyParser = require('body-parser');
 
 io.attach(server);
 
@@ -19,18 +19,16 @@ app.use(express.static(__dirname + '/public'));
 // Chatroom
 var numUsers = 0;
 var users = [];
-var targetLang;
-var sourceText;
 
 // Helps parse the POST body.
-app.use(bodyParser.urlencoded({
-    extended: true
-}));
-app.use(bodyParser.json());
-
-app.post('/language', function (request, response) {
-    targetLang = request.body.languagePreference;
-});
+// app.use(bodyParser.urlencoded({
+//     extended: true
+// }));
+// app.use(bodyParser.json());
+//
+// app.post('/language', function (request, response) {
+//     targetLang = request.body.languagePreference;
+// });
 
 // Translates source text into the targeted language.
 function doTranslation(targetLang, sourceText, callback) {
@@ -53,16 +51,8 @@ io.on('connection', function (socket) {
 
   // when the client emits 'new message', this listens and executes
   socket.on('new message', function (data) {
-	sourceText = data;
-
-    for (user in users) {
-        if(user.username == socket.username){
-            targetLang=user.language;
-        }
-    }
-
     // Translates data (original text). Once response is received, emits.
-    doTranslation(targetLang, data, function (translatedText) {
+    doTranslation(socket.userLanguage, data, function (translatedText) {
         socket.broadcast.emit('new message', {
             username: socket.username,
         	message: '[translated]: ' + translatedText + ' [original]: ' + data
@@ -76,13 +66,12 @@ io.on('connection', function (socket) {
 
       // we store the username in the socket session for this client
     socket.username = username;
-  	socket.userlanguage = language;
+  	socket.userLanguage = language;
 
-    var user = { username: socket.username, language : socket.userlanguage};
+    var user = { username: socket.username, language : socket.userLanguage};
 
     users.push(user);
 
-  	console.log('user name, user language: ' + socket.username + ', ' + socket.userlanguage)
     ++numUsers;
     addedUser = true;
     socket.emit('login', {

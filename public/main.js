@@ -38,7 +38,7 @@ $(function() {
     log(message);
   }
 
-  // Sets the client's username
+  // Sets the client's username and preferred language
   function setUsername () {
     username = cleanInput($usernameInput.val().trim());
     language = $languageInput.val();
@@ -51,12 +51,11 @@ $(function() {
       $loginPage.off('click');
       $currentInput = $inputMessage.focus();
 
-      // Tell the server your username
-     // socket.emit('add user', username, userlanguage);
-	  socket.emit('add user', username,language);
+      // Tell the server your username and preferred language
+	  socket.emit('add user', username, language);
     }
   }
-  
+
   // Sends a chat message
   function sendMessage () {
     var message = $inputMessage.val();
