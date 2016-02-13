@@ -42,8 +42,8 @@ $(function() {
   function setUsername () {
     username = cleanInput($usernameInput.val().trim());
     language = $languageInput.val();
-	
-	
+
+
     // If the username is valid
     if (username) {
       $loginPage.fadeOut();
@@ -57,7 +57,6 @@ $(function() {
     }
   }
   
-
   // Sends a chat message
   function sendMessage () {
     var message = $inputMessage.val();
@@ -270,9 +269,4 @@ $(function() {
   socket.on('stop typing', function (data) {
     removeChatTyping(data);
   });
-  
-  
-  
-  
-  
 });

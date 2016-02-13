@@ -20,38 +20,46 @@ app.use(express.static(__dirname + '/public'));
 var numUsers = 0;
 
 var users = [];
-var targetLang; 
+var targetLang;
 var sourceText;
+
+// Translates source text into the targeted language.
+function doTranslation(targetLang, sourceText, callback) {
+    superagent
+        .get('https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=' + targetLang + '&dt=t&q=' + sourceText)
+        .end(function (err, res) {
+            var rawStr = err.rawResponse;
+
+            var str = rawStr.replace(/,,/g, ',0,');
+            str = str.replace(/,,/g, ',0,');
+
+            var result = JSON.parse(str);
+
+            return callback(result[0][0][0]);
+        });
+}
 
 io.on('connection', function (socket) {
   var addedUser = false;
 
   // when the client emits 'new message', this listens and executes
   socket.on('new message', function (data) {
-
 	sourceText = data;
+    targetLang = 'en';
 
-  for (user in users) {
-    if(user.username == socket.username){
-      targetLang=user.language; 
+    for (user in users) {
+        if(user.username == socket.username){
+            targetLang=user.language;
+        }
     }
-  }
 
-  superagent
-      .get('https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=' + targetLang + "&dt=t&q=" + sourceText)
-      .end(function (err, res) {
-          var rawStr = err.rawResponse;
-		
-          var str = rawStr.replace(/,,/g, ",0,");
-          str = str.replace(/,,/g, ",0,");
-
-          var result = JSON.parse(str);
-
-      		socket.broadcast.emit('new message', {
-      			username: socket.username,
-      			message: '[translated]: '+result[0][0][0] + '\n[original]: ' + data
-      		});
-      });	
+    // Translates data (original text). Once response is received, emits.
+    doTranslation(targetLang, data, function (translatedText) {
+        socket.broadcast.emit('new message', {
+            username: socket.username,
+        	message: '[translated]: ' + translatedText + ' [original]: ' + data
+        });
+    });
   });
 
   // when the client emits 'add user', this listens and executes
@@ -65,7 +73,7 @@ io.on('connection', function (socket) {
     var user = { username: socket.username, language : socket.userlanguage};
 
     users.push(user);
-  	
+
   	console.log('user name, user language: ' + socket.username + ', ' + socket.userlanguage)
     ++numUsers;
     addedUser = true;
