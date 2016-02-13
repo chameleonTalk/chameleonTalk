@@ -23,6 +23,10 @@ var users = [];
 var targetLang;
 var sourceText;
 
+app.get('/language', function (request, response) {
+    targetLang = request.query.languagePreference;
+});
+
 // Translates source text into the targeted language.
 function doTranslation(targetLang, sourceText, callback) {
     superagent
@@ -45,7 +49,6 @@ io.on('connection', function (socket) {
   // when the client emits 'new message', this listens and executes
   socket.on('new message', function (data) {
 	sourceText = data;
-    targetLang = 'en';
 
     for (user in users) {
         if(user.username == socket.username){
