@@ -23,7 +23,8 @@
   },
   "homepage": "https://github.com/chameleonTalk/chameleonTalk#readme",
   "dependencies": {
-    "express": "^4.13.3",
+    "body-parser": "*",
+    "express": "*",
     "socket.io": "^1.4.4",
     "superagent": "^1.6.1"
   }

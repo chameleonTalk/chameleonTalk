@@ -5,6 +5,7 @@ var server = require('http').createServer(app);
 var io = require('socket.io')();
 var port = process.env.PORT || 3000;
 var superagent = require('superagent');
+var bodyParser = require('body-parser');
 
 io.attach(server);
 
@@ -16,15 +17,19 @@ server.listen(port, function () {
 app.use(express.static(__dirname + '/public'));
 
 // Chatroom
-
 var numUsers = 0;
-
 var users = [];
 var targetLang;
 var sourceText;
 
-app.get('/language', function (request, response) {
-    targetLang = request.query.languagePreference;
+// Helps parse the POST body.
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
+app.use(bodyParser.json());
+
+app.post('/language', function (request, response) {
+    targetLang = request.body.languagePreference;
 });
 
 // Translates source text into the targeted language.
