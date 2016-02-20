@@ -31,7 +31,7 @@ var users = [];
 // });
 
 // Translates source text into the targeted language.
-function doTranslation(targetLang, sourceText, callback) {
+function doTranslation(targetLang, sourceText, socket, callback) {
     superagent
         .get('https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=' + targetLang + '&dt=t&q=' + sourceText)
         .end(function (err, res) {
@@ -42,7 +42,7 @@ function doTranslation(targetLang, sourceText, callback) {
 
             var result = JSON.parse(str);
 
-            return callback(result[0][0][0]);
+            return callback(socket, result[0][0][0]);
         });
 }
 
@@ -52,12 +52,18 @@ io.on('connection', function (socket) {
   // when the client emits 'new message', this listens and executes
   socket.on('new message', function (data) {
     // Translates data (original text). Once response is received, emits.
-    doTranslation(socket.userLanguage, data, function (translatedText) {
-        socket.broadcast.emit('new message', {
-            username: socket.username,
-        	message: '[translated]: ' + translatedText + ' [original]: ' + data
-        });
-    });
+    for (key in io.sockets.connected) {
+        var connectedSocket = io.sockets.connected[key];
+        if (socket.id != connectedSocket.id) {
+            // Need to pass connectedSocket into doTranslation to maintain its value.
+            doTranslation(connectedSocket.userLanguage, data, connectedSocket, function (connectedSocket, translatedText) {
+                connectedSocket.emit('new message', {
+                    username: socket.username,
+                    message: translatedText
+                });
+            });
+        }
+    }
   });
 
   // when the client emits 'add user', this listens and executes
