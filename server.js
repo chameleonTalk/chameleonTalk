@@ -55,11 +55,11 @@ io.on('connection', function (socket) {
     for (key in io.sockets.connected) {
         var connectedSocket = io.sockets.connected[key];
         if (socket.id != connectedSocket.id) {
+            // Need to pass connectedSocket into doTranslation to maintain its value.
             doTranslation(connectedSocket.userLanguage, data, connectedSocket, function (connectedSocket, translatedText) {
                 connectedSocket.emit('new message', {
                     username: socket.username,
                     message: translatedText
-                    // message: '[translated]: ' + translatedText + ' [original]: ' + data
                 });
             });
         }
