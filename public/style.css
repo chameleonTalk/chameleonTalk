@@ -169,4 +169,33 @@ ul {
 
 .dropdown-menu.style2 {
     left: 45.7%;
+<<<<<<< Updated upstream
+=======
+}
+
+.friendsList .container {
+    padding: 0;
+    float: left;
+    width: 100%;
+}
+
+.friendsList .container .btn {
+    outline: 0 none;
+    border-radius:0;
+    border: 0;
+    background: black;
+    color: #a8a8a8;
+}
+
+.friendsList .container .btn .active {
+    background: white;
+}
+
+.full-circle {
+    background-color: #4ced11;
+    height:7px;
+    width:7px;
+    -webkit-border-radius:50px;
+    -moz-border-radius:50px;
+>>>>>>> Stashed changes
 }
