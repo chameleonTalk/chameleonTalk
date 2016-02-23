@@ -108,6 +108,14 @@ ul {
     text-align: center;
 }
 
+.error{
+	color: #E03146;
+}
+
+.whisper{
+    color: #51B5D6;
+    font-style: italic;
+}
 
 /* Messages */
 

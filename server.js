@@ -41,19 +41,39 @@ io.on('connection', function (socket) {
 
   // when the client emits 'new message', this listens and executes
   socket.on('new message', function (data) {
-    // Translates data (original text). Once response is received, emits.
-    for (key in io.sockets.connected) {
-        var connectedSocket = io.sockets.connected[key];
-        if (socket.id != connectedSocket.id) {
-            // Need to pass connectedSocket into doTranslation to maintain its value.
-            doTranslation(connectedSocket.userLanguage, data, connectedSocket, function (connectedSocket, translatedText) {
-                connectedSocket.emit('new message', {
-                    username: socket.username,
-                    message: translatedText
-                });
-            });
-        }
-    }
+      
+      if(data.substr(0,4) === 'dir@'){
+			msg = data.substr(3);
+			var ind = msg.indexOf('@');
+			if(ind !== -1){
+				var name = msg.substring(0, ind + 1);
+                console.log("name parsed: " + name);
+				var msg = msg.substring(ind + 1);
+				if(name in participants){
+				//	participants[name].emit('whisper', {msg: msg, nick: socket.sername});
+				//	console.log('message sent is: ' + msg);
+				//	console.log('Whisper!');
+				} else{
+					callback('Error!  Did you enter a valid user? Try again!');
+				}
+			} else{
+				callback('Error!  Did you enter a message for your whisper? Try again!');
+			}
+		} else{
+        // Translates data (original text). Once response is received, emits. ------------
+            for (key in io.sockets.connected) {
+                var connectedSocket = io.sockets.connected[key];
+                if (socket.id != connectedSocket.id) {
+                    // Need to pass connectedSocket into doTranslation to maintain its value.
+                    doTranslation(connectedSocket.userLanguage, data, connectedSocket, function (connectedSocket, translatedText) {
+                        connectedSocket.emit('new message', {
+                            username: socket.username,
+                            message: translatedText
+                        });
+                    });
+                }
+        }//--------------------------------------------------------------------------
+		}
   });
 
 
@@ -63,7 +83,6 @@ io.on('connection', function (socket) {
     if (addedUser) return;
       
     if(username in participants){
-        console.log("It some stuff are in the array of k-v pair")
 		callback(false);
 	}else{
 		callback(true);
@@ -75,6 +94,9 @@ io.on('connection', function (socket) {
         updateParticipants();
         ++numUsers;
         addedUser = true;
+        
+        console.log("user name: " + socket.username + "\t user name: " + socket.userLanguage + "\t socket id: " + socket.id );
+        
         socket.emit('login', {
           numUsers: numUsers
         });

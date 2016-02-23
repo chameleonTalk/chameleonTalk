@@ -12,6 +12,7 @@ $(function() {
   var $usernameInput = $('.usernameInput'); // Input for username
   var $languageInput = $('.languageInput');
   var $messages = $('.messages'); // Messages area
+  var $chat = $('#chat'); // may not be necessary DEBUG
   var $inputMessage = $('.inputMessage'); // Input message input box
   var $languageDropdown = $('#languageDropdown');
   var $loginPage = $('.login.page'); // The login page
@@ -253,7 +254,7 @@ $(function() {
   socket.on('login', function (data) {
     connected = true;
     // Display the welcome message
-    var message = "Hi, " + username + "! You are currently in a public chat session - ";
+    var message = "Hi, " + username + " ! You are currently in a public chat session - ";
     log(message, {
       prepend: true
     });
@@ -288,13 +289,16 @@ $(function() {
     removeChatTyping(data);
   });
     
-socket.on('participants', function(data){
-      console.log("inside front end participants function");
-    var html='';
+  socket.on('participants', function(data){
+    var html='Currently loged on: ';
+     // console.log(html);
     for(i = 0; i < data.length; i++){
         html += data[i] + '&nbsp';
     }
-      console.log(html);
     $('#participants').html(html);
+  });
+    
+  socket.on('whisper', function(data){
+      $chat.append('<span class="whisper"><b>' + data.nick + ': </b>' + data.msg + "</span><br/>");
   });
 });
