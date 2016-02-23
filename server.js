@@ -53,10 +53,27 @@ io.on('connection', function (socket) {
                 console.log("name parsed: " + name);
 				var msg = msg.substring(indSpace + 1);
 				if(name in participants){
-					participants[name].emit('whisper', {msg: msg, nick: socket.sername});
-					console.log('message sent is: ' + msg);
-					console.log('Whisper!');
-				} else{
+                    
+                    
+                // Translates data (original text). Once response is received, emits. ------------
+                //  for (key in io.sockets.connected) {
+                       // var connectedSocket = io.sockets.connected[key];
+                       // if (socket.id != connectedSocket.id) {
+                            // Need to pass connectedSocket into doTranslation to maintain its value.
+                            doTranslation(participants[name].userLanguage, msg, participants[name], function (connectedSocket, translatedText) {
+                            console.log('message sent is: ' + msg);
+                            console.log('Whisper!');
+                                participants[name].emit('whisper', {
+                                    msg: translatedText,
+                                    name: socket.username,
+                                });
+                            });
+                       // }                   
+                            //participants[name].emit('whisper', {msg: msg, name: socket.username});
+
+                   // }
+                }
+                    else{
 					//callback('Error!  Did you enter a valid user? Try again!');
 				}
 			} else{

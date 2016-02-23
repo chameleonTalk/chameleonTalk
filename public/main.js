@@ -299,6 +299,6 @@ $(function() {
   });
     
   socket.on('whisper', function(data){
-      $chat.append('<span class="whisper"><b>' + data.nick + ': </b>' + data.msg + "</span><br/>");
+      $chat.append('<span class="whisper"><b>' + data.name + ': </b>' + data.msg + "</span><br/>");
   });
 });
