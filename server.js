@@ -18,22 +18,12 @@ app.use(express.static(__dirname + '/public'));
 
 // Chatroom
 var numUsers = 0;
+var participants = {};
 var users = [];
-
-// Helps parse the POST body.
-// app.use(bodyParser.urlencoded({
-//     extended: true
-// }));
-// app.use(bodyParser.json());
-//
-// app.post('/language', function (request, response) {
-//     targetLang = request.body.languagePreference;
-// });
 
 // Translates source text into the targeted language.
 function doTranslation(targetLang, sourceText, socket, callback) {
-    superagent
-        .get('https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=' + targetLang + '&dt=t&q=' + sourceText)
+    superagent       .get('https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=' + targetLang + '&dt=t&q=' + sourceText)
         .end(function (err, res) {
             var rawStr = err.rawResponse;
 
@@ -66,28 +56,35 @@ io.on('connection', function (socket) {
     }
   });
 
+
   // when the client emits 'add user', this listens and executes
-  socket.on('add user', function (username, language) {
+  socket.on('add user', function (username, language, callback) {
+      
     if (addedUser) return;
+      
+    if(username in participants){
+        console.log("It some stuff are in the array of k-v pair")
+		callback(false);
+	}else{
+		callback(true);
 
-      // we store the username in the socket session for this client
-    socket.username = username;
-  	socket.userLanguage = language;
-
-    var user = { username: socket.username, language : socket.userLanguage};
-
-    users.push(user);
-
-    ++numUsers;
-    addedUser = true;
-    socket.emit('login', {
-      numUsers: numUsers
-    });
-    // echo globally (all clients) that a person has connected
-    socket.broadcast.emit('user joined', {
-      username: socket.username,
-      numUsers: numUsers
-      });
+        // we store the username in the socket session for this client
+        socket.username = username;
+        socket.userLanguage = language;
+        participants[socket.username]=socket;
+        updateParticipants();
+        ++numUsers;
+        addedUser = true;
+        socket.emit('login', {
+          numUsers: numUsers
+        });
+        
+        // echo globally (all clients) that a person has connected
+        socket.broadcast.emit('user joined', {
+          username: socket.username,
+          numUsers: numUsers
+        });
+    }
   });
 
   // when the client emits 'typing', we broadcast it to others
@@ -108,12 +105,19 @@ io.on('connection', function (socket) {
   socket.on('disconnect', function () {
     if (addedUser) {
       --numUsers;
-
+		delete participants[socket.username];
+		updateParticipants();
       // echo globally that this client has left
       socket.broadcast.emit('user left', {
         username: socket.username,
         numUsers: numUsers
       });
     }
-  });
+  })
+
+   function updateParticipants(){
+    // DEBUG
+      console.log("Who's on the list: "+Object.keys(participants));
+	io.sockets.emit('participants', Object.keys(participants));
+  }
 });
