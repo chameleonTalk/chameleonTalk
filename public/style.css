@@ -120,8 +120,9 @@ ul {
 }
 
 .whisper{
-    color: #51B5D6;
+    color: #80ffbf;
     font-style: italic;
+    padding: 10%;
 }
 
 /* Messages */
