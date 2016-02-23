@@ -167,10 +167,8 @@ ul {
     text-align: center;
 }
 
-.dropdown-menu.style2 {
+.dropdown-menu .style2 {
     left: 45.7%;
-<<<<<<< Updated upstream
-=======
 }
 
 .friendsList .container {
@@ -197,5 +195,4 @@ ul {
     width:7px;
     -webkit-border-radius:50px;
     -moz-border-radius:50px;
->>>>>>> Stashed changes
 }
