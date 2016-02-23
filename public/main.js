@@ -56,11 +56,12 @@ $(function() {
 
     // If the username is valid
     if (username) {
-
-
       // Tell the server your username and preferred language
-	  socket.emit('add user', username, language, function(data){	
+	  socket.emit('add user', username, language, function(data){          
+        
         if(data){
+            
+            
             $('.form').fadeOut();
             $loginPage.fadeOut();
             //  $languageDropdown.fadeOut();
@@ -71,7 +72,8 @@ $(function() {
             $loginPage.off('click');
             $currentInput = $inputMessage.focus();
         }else{
-            $usernameError.html('Sorry, that username is already taken.');
+           // console.log('username duplicate error triggered');
+            $('#logInError').html('<span class="error"><b>' + 'Sorry, that username is already taken.' + "</span><br/>");
         }
       });
     }
@@ -223,6 +225,7 @@ $(function() {
     // When the client hits ENTER on their keyboard
     if (event.which === 13) {
       if (username) {
+          console.log("username exists");
         sendMessage();
         socket.emit('stop typing');
         typing = false;

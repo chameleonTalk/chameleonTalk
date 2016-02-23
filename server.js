@@ -64,6 +64,7 @@ io.on('connection', function (socket) {
                 }
                     else{
 					//callback('Error!  Did you enter a valid user? Try again!');
+                        $chat.append('<span class="chatError">' + data + "</span><br/>");
 				}
 			} else{
 				//callback('Error!  Did you enter a message for your whisper? Try again!');

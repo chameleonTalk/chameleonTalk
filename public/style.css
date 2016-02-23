@@ -108,6 +108,13 @@ ul {
     text-align: center;
 }
 
+#chatError, #logInError { 
+    color: #E03146; 
+    font-size: 1.5em;
+    padding: 1%;
+    text-align: center;    
+}
+
 .error{
 	color: #E03146;
 }
