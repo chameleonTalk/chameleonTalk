@@ -43,22 +43,24 @@ io.on('connection', function (socket) {
   socket.on('new message', function (data) {
       
       if(data.substr(0,4) === 'dir@'){
-			msg = data.substr(3);
-			var ind = msg.indexOf('@');
-			if(ind !== -1){
-				var name = msg.substring(0, ind + 1);
+			var msg = data.substr(4);
+			var indAt = msg.indexOf('@');
+            var indSpace = msg.indexOf(' ');
+			if(indAt !== -1){
+				var name = msg.substring(indAt+1, indSpace);
                 console.log("name parsed: " + name);
 				var msg = msg.substring(ind + 1);
 				if(name in participants){
-				//	participants[name].emit('whisper', {msg: msg, nick: socket.sername});
-				//	console.log('message sent is: ' + msg);
-				//	console.log('Whisper!');
+					participants[name].emit('whisper', {msg: msg, nick: socket.sername});
+					console.log('message sent is: ' + msg);
+					console.log('Whisper!');
 				} else{
-					callback('Error!  Did you enter a valid user? Try again!');
+					//callback('Error!  Did you enter a valid user? Try again!');
 				}
 			} else{
-				callback('Error!  Did you enter a message for your whisper? Try again!');
+				//callback('Error!  Did you enter a message for your whisper? Try again!');
 			}
+          console.log('at the end of dir@ stuff...')
 		} else{
         // Translates data (original text). Once response is received, emits. ------------
             for (key in io.sockets.connected) {
