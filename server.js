@@ -42,6 +42,7 @@ io.on('connection', function (socket) {
   // when the client emits 'new message', this listens and executes
   socket.on('new message', function (data) {
       
+      // if direct chat request is received, msg will be translated and passed to a selected person 
       if(data.substr(0,4) === 'dir@'){
           console.log('dir@ found');
 			var msg = data.substr(4);
@@ -64,13 +65,14 @@ io.on('connection', function (socket) {
                 }
                     else{
 					//callback('Error!  Did you enter a valid user? Try again!');
-                        $chat.append('<span class="chatError">' + data + "</span><br/>");
+                        console.log('invalid user specified on whisper req');
 				}
 			} else{
 				//callback('Error!  Did you enter a message for your whisper? Try again!');
+                        console.log('invalid message! (whisper req)');
 			}
-		} else{
-        // Translates data (original text). Once response is received, emits. ------------
+		} else{ // otherwise messages are sent to everyone
+        // Translates data (original text). Once response is received, emits. 
             for (key in io.sockets.connected) {
                 var connectedSocket = io.sockets.connected[key];
                 if (socket.id != connectedSocket.id) {
@@ -82,7 +84,7 @@ io.on('connection', function (socket) {
                         });
                     });
                 }
-        }//--------------------------------------------------------------------------
+        }
 		}
   });
 
