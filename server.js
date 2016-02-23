@@ -23,7 +23,7 @@ var users = [];
 
 // Translates source text into the targeted language.
 function doTranslation(targetLang, sourceText, socket, callback) {
-    superagent       .get('https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=' + targetLang + '&dt=t&q=' + sourceText)
+    superagent.get('https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=' + targetLang + '&dt=t&q=' + sourceText)
         .end(function (err, res) {
             var rawStr = err.rawResponse;
 
@@ -53,25 +53,14 @@ io.on('connection', function (socket) {
                 console.log("name parsed: " + name);
 				var msg = msg.substring(indSpace + 1);
 				if(name in participants){
-                    
-                    
-                // Translates data (original text). Once response is received, emits. ------------
-                //  for (key in io.sockets.connected) {
-                       // var connectedSocket = io.sockets.connected[key];
-                       // if (socket.id != connectedSocket.id) {
-                            // Need to pass connectedSocket into doTranslation to maintain its value.
-                            doTranslation(participants[name].userLanguage, msg, participants[name], function (connectedSocket, translatedText) {
-                            console.log('message sent is: ' + msg);
-                            console.log('Whisper!');
-                                participants[name].emit('whisper', {
-                                    msg: translatedText,
-                                    name: socket.username,
-                                });
-                            });
-                       // }                   
-                            //participants[name].emit('whisper', {msg: msg, name: socket.username});
-
-                   // }
+                    doTranslation(participants[name].userLanguage, msg, socket, function (connectedSocket, translatedText) {
+                    console.log('message sent is: ' + msg);
+                    console.log('Whisper!');
+                        participants[name].emit('whisper', {
+                            msg: translatedText,
+                            name: socket.username,
+                        });
+                    });
                 }
                     else{
 					//callback('Error!  Did you enter a valid user? Try again!');

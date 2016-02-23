@@ -66,7 +66,7 @@ $(function() {
             //  $languageDropdown.fadeOut();
             $('body').css("background-color", "white");
             $chatPage.show();
-            $('.container').fadeOut();
+            $('.container2').fadeOut();
 
             $loginPage.off('click');
             $currentInput = $inputMessage.focus();
@@ -300,5 +300,9 @@ $(function() {
     
   socket.on('whisper', function(data){
       $chat.append('<span class="whisper"><b>' + data.name + ': </b>' + data.msg + "</span><br/>");
+  });
+    
+  socket.on('errorMsg', function(data){
+      $chat.append('<span class="error"><b>' + data.name + ': </b>' + data.msg + "</span><br/>");
   });
 });
