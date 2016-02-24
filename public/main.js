@@ -37,7 +37,7 @@ $(function() {
     log(message);
   }
 
-    
+
   function addParticipantsMessage (data) {
     var message = '';
     if (data.numUsers === 1) {
@@ -47,7 +47,7 @@ $(function() {
     }
     log(message);
   }
-    
+
   // Sets the client's username and preferred language
   function setUsername () {
     username = cleanInput($usernameInput.val().trim());
@@ -57,11 +57,11 @@ $(function() {
     // If the username is valid
     if (username) {
       // Tell the server your username and preferred language
-	  socket.emit('add user', username, language, function(data){          
-        
+	  socket.emit('add user', username, language, function(data){
+
         if(data){
-            
-            
+
+
             $('.form').fadeOut();
             $loginPage.fadeOut();
             //  $languageDropdown.fadeOut();
@@ -291,26 +291,26 @@ $(function() {
   socket.on('stop typing', function (data) {
     removeChatTyping(data);
   });
-    
+
   socket.on('participants', function(data){
-    var html='Currently loged on: ';
+    var html='Currently logged on: ';
      // console.log(html);
     for(i = 0; i < data.length; i++){
         html += data[i] + '&nbsp';
     }
     $('#participants').html(html);
   });
-    
+
   socket.on('whisper', function(data){
       $chat.append('<span class="whisper"><b>' + data.name + ': </b>' + data.msg + "</span><br/>");
   });
-    
+
   socket.on('errorMsg', function(data){
       $chat.append('<span class="error"><b>' + data.name + ': </b>' + data.msg + "</span><br/>");
   });
-      
+
   $('.friends').click(function() {
     var name = $(this).attr("value");
-    $(".inputMessage").val('dir@' + name + " "); 
+    $(".inputMessage").val('dir@' + name + " ");
   });
 });
