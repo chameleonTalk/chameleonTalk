@@ -60,11 +60,8 @@ $(function() {
 	  socket.emit('add user', username, language, function(data){
 
         if(data){
-
-
             $('.form').fadeOut();
             $loginPage.fadeOut();
-            //  $languageDropdown.fadeOut();
             $('body').css("background-color", "white");
             $chatPage.show();
             $('.container2').fadeOut();
@@ -256,8 +253,11 @@ $(function() {
   // Whenever the server emits 'login', log the login message
   socket.on('login', function (data) {
     connected = true;
+      
     // Display the welcome message
-    var message = "Hi, " + username + " ! You are currently in a public chat session - ";
+    var lang = getFullLanguageName();
+      console.log(lang);
+    var message = "Hi, " + username + " ! You are currently in a public chat session - [ " + language + " ]";
     log(message, {
       prepend: true
     });
@@ -317,4 +317,27 @@ $(function() {
     var name = $(this).attr("value");
     $(".inputMessage").val('dir@' + name + " ");
   });
+    
+  // returns full language name. takes is a language code.
+  function getFullLanguageName(data) {
+    switch(data) {
+        case "en":
+            data = 'English';
+            break;
+        case "es":
+            data = 'Spanish';
+            break;
+        case "de":
+            data = 'German';
+            break;
+        case "fr":
+            data = 'French';
+            break;
+        case "pl":
+            data = 'Polish';
+        default:
+            data = 'Not Specified';
+    }
+      return data;
+  }
 });
