@@ -12,15 +12,14 @@ $(function() {
   var $usernameInput = $('.usernameInput'); // Input for username
   var $languageInput = $('.languageInput');
   var $messages = $('.messages'); // Messages area
+  var $chat = $('#chat'); // may not be necessary DEBUG
   var $inputMessage = $('.inputMessage'); // Input message input box
-
+  var $languageDropdown = $('#languageDropdown');
   var $loginPage = $('.login.page'); // The login page
   var $chatPage = $('.chat.page'); // The chatroom page
 
   // Prompt for setting a username
-  var username;
-  var language;
-  //var languages[];
+  var username, language, welcome;
   var connected = false;
   var typing = false;
   var lastTypingTime;
@@ -38,6 +37,17 @@ $(function() {
     log(message);
   }
 
+    
+  function addParticipantsMessage (data) {
+    var message = '';
+    if (data.numUsers === 1) {
+      message += "there's 1 participant";
+    } else {
+      message += "there are " + data.numUsers + " participants";
+    }
+    log(message);
+  }
+    
   // Sets the client's username and preferred language
   function setUsername () {
     username = cleanInput($usernameInput.val().trim());
@@ -46,13 +56,26 @@ $(function() {
 
     // If the username is valid
     if (username) {
-      $loginPage.fadeOut();
-      $chatPage.show();
-      $loginPage.off('click');
-      $currentInput = $inputMessage.focus();
-
       // Tell the server your username and preferred language
-	  socket.emit('add user', username, language);
+	  socket.emit('add user', username, language, function(data){          
+        
+        if(data){
+            
+            
+            $('.form').fadeOut();
+            $loginPage.fadeOut();
+            //  $languageDropdown.fadeOut();
+            $('body').css("background-color", "white");
+            $chatPage.show();
+            $('.container2').fadeOut();
+
+            $loginPage.off('click');
+            $currentInput = $inputMessage.focus();
+        }else{
+           // console.log('username duplicate error triggered');
+            $('#logInError').html('<span class="error"><b>' + 'Sorry, that username is already taken.' + "</span><br/>");
+        }
+      });
     }
   }
 
@@ -194,7 +217,6 @@ $(function() {
   }
 
   // Keyboard events
-
   $window.keydown(function (event) {
     // Auto-focus the current input when a key is typed
     if (!(event.ctrlKey || event.metaKey || event.altKey)) {
@@ -203,6 +225,7 @@ $(function() {
     // When the client hits ENTER on their keyboard
     if (event.which === 13) {
       if (username) {
+          console.log("username exists");
         sendMessage();
         socket.emit('stop typing');
         typing = false;
@@ -234,7 +257,7 @@ $(function() {
   socket.on('login', function (data) {
     connected = true;
     // Display the welcome message
-    var message = "Welcome to Socket.IO Chat – ";
+    var message = "Hi, " + username + " ! You are currently in a public chat session - ";
     log(message, {
       prepend: true
     });
@@ -267,5 +290,27 @@ $(function() {
   // Whenever the server emits 'stop typing', kill the typing message
   socket.on('stop typing', function (data) {
     removeChatTyping(data);
+  });
+    
+  socket.on('participants', function(data){
+    var html='Currently loged on: ';
+     // console.log(html);
+    for(i = 0; i < data.length; i++){
+        html += data[i] + '&nbsp';
+    }
+    $('#participants').html(html);
+  });
+    
+  socket.on('whisper', function(data){
+      $chat.append('<span class="whisper"><b>' + data.name + ': </b>' + data.msg + "</span><br/>");
+  });
+    
+  socket.on('errorMsg', function(data){
+      $chat.append('<span class="error"><b>' + data.name + ': </b>' + data.msg + "</span><br/>");
+  });
+      
+  $('.friends').click(function() {
+    var name = $(this).attr("value");
+    $(".inputMessage").val('dir@' + name + " "); 
   });
 });

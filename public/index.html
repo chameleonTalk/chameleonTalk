@@ -17,32 +17,81 @@
   		<script src="/main.js"></script>
 	</head>
 	<body>
-		<ul class="pages">
-		    <li class="chat page">
-		      <div class="chatArea">
-		        <ul class="messages"></ul>
-		      </div>
+		<div class="pages">
+		    <div class="chat page">
+                <div class="friendsList">
+                    <h3 align="center"><font color="#ffffff">Friends</font></h3>
+                    <br>
+                    <div class="container">
+                        <button type="submit" class="btn btn-default btn-block active friends" value='susan'>Susan</button>
+                        <br>
+                        <button type="submit" class="btn btn-default btn-block active friends" value='louise'>Louise</button>
+                        <br>
+                        <button type="submit" class="btn btn-default btn-block active friends" value='jordan'>Jordan</button>
+                        <br>
+                        <button type="submit" class="btn btn-default btn-block active friends" value='kae'>Kae</button>
+                        <br>
+                        <button type="submit" class="btn btn-default btn-block active friends" value='jeanne'>Jeanne</button>
+                        <br>
+                    </div>
+                </div>               
+                
+                <div class="chatArea">
+                        <h4 id="participants" style='color: orange; padding: 1%;'>Participant list here</h4>
+                  <ul class="messages" id='chat'></ul>
+                 </div><!-- chatArea -->
+                <p id='chatError' style='color: #fff;'>Message Transfer Error Msg Goes Here</p>
 		      <input class="inputMessage" placeholder="Type here..."/>
-		    </li>
-		    <li class="login page">
-		      <div class="form">
-		        <h3 class="title">Welcome to ChameleonTalk</h3>
-		        <h3 class="title">What's your nickname?</h3>
-		        <input class="usernameInput" type="text" maxlength="14" />
-				   <div style="width:10%; margin: auto;">
-						<!-- <form action="/language" method="post"> -->
-							<select name="languagePreference" class="languageInput" onchange="this.form.submit();">
-								<option selected>Language Preference:</option>
-								<option value="es">Spanish</option>
-								<option value="en">English</option>
-								<option value="de">German</option>
-								<option value="fr">French</option>
-								<option value="pl">Polish</option>
-							</select>
-						<!-- </form> -->
-				   </div>
-			   </div>
-		   </li>
-		  </ul>
+            </div><!-- chat page -->
+            
+      <div class="container2" style="background-color: #000; width: 100%;">
+            <h4 style="color: #fff;">Group 10</h4>
+            <h2 style="color: #fff;">ChameleonTalk Demo</h2> 
+            <button type="button" class="btn btn-default">&lt;&#8725;&#8727; code&gt;</button>
+            <button type="button" class="btn btn-primary">PPT</button>
+            <button type="button" class="btn btn-success">SRD</button>
+            <button type="button" class="btn btn-info">Misc.</button>
+            <button type="button" class="btn btn-warning">1-On-1</button>
+            <button type="button" class="btn btn-danger">Anonymous</button>
+
+
+            <div style="width:30%; margin: auto; padding-top: 1%;"  onchange="this.form.submit();">
+                <select class="form-control languageInput">
+                    <option value="en">Prefered Language</option>
+                    <option value="es">Spanish</option>
+                    <option value="en">English</option>
+                    <option value="de">German</option>
+                    <option value="fr">French</option>
+                    <option value="pl">Polish</option>
+                </select>
+            </div>
+    </div><!-- container -->    
+            
+            
+            <div class="login page">
+		        <div class="form">
+                    <h3 class="title">Welcome to ChameleonTalk</h3>
+                    <h3 class="title">What's your nickname?</h3>                    
+                    <input class="usernameInput" type="text" maxlength="14" />                    
+                    <div style="width:10%; margin: auto;">
+                        <select name="languagePreference" class="languageInput" onchange="this.form.submit();">
+                            <option selected value="es">Language Preference:</option>
+                            <option value="es">Spanish</option>
+                            <option value="en">English</option>
+                            <option value="de">German</option>
+                            <option value="fr">French</option>
+                            <option value="pl">Polish</option>
+                        </select>
+				    </div><!-- langageDropdown -->                 
+			    </div><!-- </form> -->
+                            <p id='logInError' style='color: #fff;'></p>    
+            </div><!-- login page -->
+		  </div><!-- pages -->
+        
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+        <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 	  </body>
 </html>
+
