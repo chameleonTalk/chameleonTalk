@@ -308,4 +308,9 @@ $(function() {
   socket.on('errorMsg', function(data){
       $chat.append('<span class="error"><b>' + data.name + ': </b>' + data.msg + "</span><br/>");
   });
+      
+  $('.friends').click(function() {
+    var name = $(this).attr("value");
+    $(".inputMessage").val('dir@' + name + " "); 
+  });
 });
