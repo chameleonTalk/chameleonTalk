@@ -151,9 +151,10 @@ io.on('connection', function (socket) {
     }
   })
 
+   // keep track of who is logged on
    function updateParticipants(){
-    // DEBUG
-      console.log("Who's on the list: "+Object.keys(participants));
+    console.log("Who's on the list: "+Object.keys(participants));
+    // send list of usernames extracted from participants k-v pairs
 	io.sockets.emit('participants', Object.keys(participants));
   }
 });

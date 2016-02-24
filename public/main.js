@@ -292,6 +292,7 @@ $(function() {
     removeChatTyping(data);
   });
 
+  // display currently logged participants' usernames on chat board
   socket.on('participants', function(data){
     var html='Currently logged on: ';
      // console.log(html);
@@ -301,14 +302,17 @@ $(function() {
     $('#participants').html(html);
   });
 
+  // log a whisper message on chat board
   socket.on('whisper', function(data){
       $chat.append('<span class="whisper"><b>' + data.name + ': </b>' + data.msg + "</span><br/>");
   });
 
+  // log an error message on chat board
   socket.on('errorMsg', function(data){
       $chat.append('<span class="error"><b>' + data.name + ': </b>' + data.msg + "</span><br/>");
   });
 
+  // pre-fill the text input box with whisper syntax for a whisper message
   $('.friends').click(function() {
     var name = $(this).attr("value");
     $(".inputMessage").val('dir@' + name + " ");
