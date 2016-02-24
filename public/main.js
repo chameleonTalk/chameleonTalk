@@ -255,9 +255,8 @@ $(function() {
     connected = true;
       
     // Display the welcome message
-    var lang = getFullLanguageName();
-      console.log(lang);
-    var message = "Hi, " + username + " ! You are currently in a public chat session - [ " + language + " ]";
+    var lang = getFullLanguageName(language);
+    var message = "Hi, " + username + " ! You are currently in a public chat session - "+ lang;
     log(message, {
       prepend: true
     });
@@ -340,4 +339,4 @@ $(function() {
     }
       return data;
   }
-}); // test
+}); 
