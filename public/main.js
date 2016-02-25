@@ -253,10 +253,10 @@ $(function() {
   // Whenever the server emits 'login', log the login message
   socket.on('login', function (data) {
     connected = true;
-      
+
     // Display the welcome message
     var lang = getFullLanguageName(language);
-    var message = "Hi, " + username + " ! You are currently in a public chat session - in "+ lang;
+    var message = "Hi, " + username + "! You are currently in a public chat session - in "+ lang;
     log(message, {
       prepend: true
     });
@@ -293,7 +293,7 @@ $(function() {
 
   // display currently logged participants' usernames on chat board
   socket.on('participants', function(data){
-    var html='Currently logged on: ';
+    var html='Online Users: ';
      // console.log(html);
     for(i = 0; i < data.length; i++){
         html += data[i] + '&nbsp';
@@ -316,7 +316,7 @@ $(function() {
     var name = $(this).attr("value");
     $(".inputMessage").val('dir@' + name + " ");
   });
-    
+
   // returns full language name. takes is a language code.
   function getFullLanguageName(data) {
     switch(data) {
@@ -339,4 +339,4 @@ $(function() {
     }
       return data;
   }
-}); 
+});
