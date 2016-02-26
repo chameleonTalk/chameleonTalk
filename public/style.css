@@ -108,6 +108,22 @@ ul {
     text-align: center;
 }
 
+#chatError, #logInError { 
+    color: #E03146; 
+    font-size: 1.5em;
+    padding: 1%;
+    text-align: center;    
+}
+
+.error{
+	color: #E03146;
+}
+
+.whisper{
+    color: #80ffbf;
+    font-style: italic;
+    padding: 10%;
+}
 
 /* Messages */
 
@@ -185,8 +201,12 @@ ul {
     color: #a8a8a8;
 }
 
-.friendsList .container .btn .active {
-    background: white;
+.friendsList .container .btn:active {
+    background-color: white;
+}
+
+.friendsList .container .btn:focus {
+    background-color: white;
 }
 
 .full-circle {
@@ -195,4 +215,15 @@ ul {
     width:7px;
     -webkit-border-radius:50px;
     -moz-border-radius:50px;
+}
+
+.container2 {
+    background-color: #000;
+    width: 100%;
+}
+
+.container3 {
+    width:30%;
+    margin: auto;
+    padding-top: 1%;
 }

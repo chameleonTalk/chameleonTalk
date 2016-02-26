@@ -18,22 +18,13 @@ app.use(express.static(__dirname + '/public'));
 
 // Chatroom
 var numUsers = 0;
+var participants = {};
 var users = [];
-
-// Helps parse the POST body.
-// app.use(bodyParser.urlencoded({
-//     extended: true
-// }));
-// app.use(bodyParser.json());
-//
-// app.post('/language', function (request, response) {
-//     targetLang = request.body.languagePreference;
-// });
 
 // Translates source text into the targeted language.
 function doTranslation(targetLang, sourceText, socket, callback) {
-    superagent
-        .get('https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=' + targetLang + '&dt=t&q=' + sourceText)
+
+    superagent.get('https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=' + targetLang + '&dt=t&q=' + sourceText)
         .end(function (err, res) {
             var rawStr = err.rawResponse;
 
@@ -51,43 +42,86 @@ io.on('connection', function (socket) {
 
   // when the client emits 'new message', this listens and executes
   socket.on('new message', function (data) {
-    // Translates data (original text). Once response is received, emits.
-    for (key in io.sockets.connected) {
-        var connectedSocket = io.sockets.connected[key];
-        if (socket.id != connectedSocket.id) {
-            // Need to pass connectedSocket into doTranslation to maintain its value.
-            doTranslation(connectedSocket.userLanguage, data, connectedSocket, function (connectedSocket, translatedText) {
-                connectedSocket.emit('new message', {
-                    username: socket.username,
-                    message: translatedText
-                });
-            });
-        }
-    }
+      
+      // if direct chat request is received, msg will be translated and passed to a selected person 
+      if(data.substr(0,4) === 'dir@'){
+          console.log('dir@ found');
+			var msg = data.substr(4);
+			var indAt = msg.indexOf('@');
+            var indSpace = msg.indexOf(' ');
+			if(indSpace !== -1){
+                console.log('@ + space found')
+				var name = msg.substring(indAt+1, indSpace);
+                console.log("name parsed: " + name);
+				var msg = msg.substring(indSpace + 1);
+				if(name in participants){
+                    doTranslation(participants[name].userLanguage, msg, socket, function (connectedSocket, translatedText) {
+                    console.log('message sent is: ' + msg);
+                    console.log('Whisper!');
+                        participants[name].emit('whisper', {
+                            msg: translatedText,
+                            name: socket.username,
+                        });
+                    });
+                }
+                    else{
+					//callback('Error!  Did you enter a valid user? Try again!');
+                        console.log('invalid user specified on whisper req');
+				}
+			} else{
+				//callback('Error!  Did you enter a message for your whisper? Try again!');
+                        console.log('invalid message! (whisper req)');
+			}
+		} else{ // otherwise messages are sent to everyone
+        // Translates data (original text). Once response is received, emits. 
+            for (key in io.sockets.connected) {
+                var connectedSocket = io.sockets.connected[key];
+                if (socket.id != connectedSocket.id) {
+                    // Need to pass connectedSocket into doTranslation to maintain its value.
+                    doTranslation(connectedSocket.userLanguage, data, connectedSocket, function (connectedSocket, translatedText) {
+                        connectedSocket.emit('new message', {
+                            username: socket.username,
+                            message: translatedText
+                        });
+                    });
+                }
+            }
+		}
+
   });
 
+
   // when the client emits 'add user', this listens and executes
-  socket.on('add user', function (username, language) {
+  socket.on('add user', function (username, language, callback) {
+      
     if (addedUser) return;
+      
+    if(username in participants){
+		callback(false);
+	}else{
+		callback(true);
 
-      // we store the username in the socket session for this client
-    socket.username = username;
-  	socket.userLanguage = language;
-
-    var user = { username: socket.username, language : socket.userLanguage};
-
-    users.push(user);
-
-    ++numUsers;
-    addedUser = true;
-    socket.emit('login', {
-      numUsers: numUsers
-    });
-    // echo globally (all clients) that a person has connected
-    socket.broadcast.emit('user joined', {
-      username: socket.username,
-      numUsers: numUsers
-      });
+        // we store the username in the socket session for this client
+        socket.username = username;
+        socket.userLanguage = language;
+        participants[socket.username]=socket;
+        updateParticipants();
+        ++numUsers;
+        addedUser = true;
+        
+        console.log("user name: " + socket.username + "\t user language: " + socket.userLanguage + "\t socket id: " + socket.id );
+        
+        socket.emit('login', {
+          numUsers: numUsers
+        });
+        
+        // echo globally (all clients) that a person has connected
+        socket.broadcast.emit('user joined', {
+          username: socket.username,
+          numUsers: numUsers,
+          userLanguage: socket.userLanguage
+        });
+    }
   });
 
   // when the client emits 'typing', we broadcast it to others
@@ -108,12 +142,20 @@ io.on('connection', function (socket) {
   socket.on('disconnect', function () {
     if (addedUser) {
       --numUsers;
-
+		delete participants[socket.username];
+		updateParticipants();
       // echo globally that this client has left
       socket.broadcast.emit('user left', {
         username: socket.username,
         numUsers: numUsers
       });
     }
-  });
+  })
+
+   // keep track of who is logged on
+   function updateParticipants(){
+    console.log("Who's on the list: "+Object.keys(participants));
+    // send list of usernames 
+	io.sockets.emit('participants', Object.keys(participants));
+  }
 });
