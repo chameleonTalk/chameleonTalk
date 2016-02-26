@@ -297,7 +297,7 @@ $(function() {
     for(i = 0; i < data.length; i++){
         html += '<button type=\"submit\" class=\"btn btn-default btn-block active friends\" value=\"'+ data[i] +'\">'+data[i]+'</button><br>';
     }  
-    $('.container').html(html);
+    $('.container').append(html);
   });
 
   // Log a whisper message on chat board
@@ -314,7 +314,7 @@ $(function() {
   $('.friends').click(function() {
     var name = $(this).attr("value");
       console.log('name: ' + name);
-    $(".inputMessage").val('dir@' + name + " ");
+    $(".inputMessage").val('@' + name + " ");
   });
 
   // returns full language name. takes is a language code.
