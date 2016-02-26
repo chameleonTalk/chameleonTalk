@@ -290,16 +290,38 @@ $(function() {
   socket.on('stop typing', function (data) {
     removeChatTyping(data);
   });
+    
+    
+    
+    
 
   // display currently logged participants' usernames on chat board
   socket.on('participants', function(data){
-    var html='Currently logged on: ';
+//   var html='Currently logged on: ';
+    var html2='';
      // console.log(html);
+//    for(i = 0; i < data.length; i++){
+//        html += data[i] + '&nbsp';
+//    }
+      
     for(i = 0; i < data.length; i++){
-        html += data[i] + '&nbsp';
+        html2 += '<button type=\"submit\" class=\"btn btn-default btn-block active friends\" value=\"'+ data[i] +'\">'+data[i]+'</button><br>';
     }
-    $('#participants').html(html);
+      
+      
+   // $('#participants').html(html);
+    $('.container').html(html2);
   });
+    
+    
+     
+    
+    
+    
+    
+    
+    
+    
 
   // log a whisper message on chat board
   socket.on('whisper', function(data){
@@ -314,6 +336,7 @@ $(function() {
   // pre-fill the text input box with whisper syntax for a whisper message
   $('.friends').click(function() {
     var name = $(this).attr("value");
+      console.log('name: ' + name);
     $(".inputMessage").val('dir@' + name + " ");
   });
     
