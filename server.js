@@ -1,4 +1,4 @@
-// Setup basic express server
+// setup basic express server
 var express = require('express');
 var app = express();
 var server = require('http').createServer(app);
@@ -13,15 +13,15 @@ server.listen(port, function () {
   console.log('Server listening at port %d', port);
 });
 
-// Routing
+// routing
 app.use(express.static(__dirname + '/public'));
 
-// Chatroom
+// chatroom
 var numUsers = 0;
 var participants = {};
 var users = [];
 
-// Translates source text into the targeted language.
+// translates source text into the targeted language.
 function doTranslation(targetLang, sourceText, socket, callback) {
 
     superagent.get('https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=' + targetLang + '&dt=t&q=' + sourceText)

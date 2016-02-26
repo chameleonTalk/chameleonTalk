@@ -310,7 +310,7 @@ $(function() {
       $chat.append('<span class="error"><b>' + data.name + ': </b>' + data.msg + "</span><br/>");
   });
     
-  // returns full language name. takes is a language code.
+  // Returns full language name. takes is a language code.
   function getFullLanguageName(data) {
     switch(data) {
         case "en":
