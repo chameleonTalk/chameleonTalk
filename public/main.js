@@ -291,13 +291,13 @@ $(function() {
     removeChatTyping(data);
   });
 
-  // Eisplay currently logged participants' usernames on chat board
+  // Display currently logged participants' usernames on chat board
   socket.on('participants', function(data){
     var html='';      
     for(i = 0; i < data.length; i++){
         html += '<button type=\"submit\" class=\"btn btn-default btn-block active friends\" value=\"'+ data[i] +'\">'+data[i]+'</button><br>';
     }  
-    $('.container').append(html);
+    $('.container').html(html);
   });
 
   // Log a whisper message on chat board
@@ -310,13 +310,7 @@ $(function() {
       $chat.append('<span class="error"><b>' + data.name + ': </b>' + data.msg + "</span><br/>");
   });
 
-  // Pre-fill the text input box with whisper syntax for a whisper message
-  $('.friends').click(function() {
-    var name = $(this).attr("value");
-      console.log('name: ' + name);
-    $(".inputMessage").val('@' + name + " ");
-  });
-
+    
   // returns full language name. takes is a language code.
   function getFullLanguageName(data) {
     switch(data) {
@@ -339,4 +333,9 @@ $(function() {
     }
       return data;
   }
+
+  // Pre-fill the text input box with whisper syntax for a whisper message
+    $(".container").on("click", "button.friends", function(){
+         $(".inputMessage").val('@' + $(this).val() + ' ');
+    });     
 });
