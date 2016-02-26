@@ -290,50 +290,27 @@ $(function() {
   socket.on('stop typing', function (data) {
     removeChatTyping(data);
   });
-    
-    
-    
-    
 
-  // display currently logged participants' usernames on chat board
+  // Eisplay currently logged participants' usernames on chat board
   socket.on('participants', function(data){
-//   var html='Currently logged on: ';
-    var html2='';
-     // console.log(html);
-//    for(i = 0; i < data.length; i++){
-//        html += data[i] + '&nbsp';
-//    }
-      
+    var html1='';      
     for(i = 0; i < data.length; i++){
-        html2 += '<button type=\"submit\" class=\"btn btn-default btn-block active friends\" value=\"'+ data[i] +'\">'+data[i]+'</button><br>';
-    }
-      
-      
-   // $('#participants').html(html);
-    $('.container').html(html2);
+        html1 += '<button type=\"submit\" class=\"btn btn-default btn-block active friends\" value=\"'+ data[i] +'\">'+data[i]+'</button><br>';
+    }  
+    $('.container').html(html1);
   });
-    
-    
-     
-    
-    
-    
-    
-    
-    
-    
 
-  // log a whisper message on chat board
+  // Log a whisper message on chat board
   socket.on('whisper', function(data){
       $chat.append('<span class="whisper"><b>' + data.name + ': </b>' + data.msg + "</span><br/>");
   });
 
-  // log an error message on chat board
+  // Log an error message on chat board
   socket.on('errorMsg', function(data){
       $chat.append('<span class="error"><b>' + data.name + ': </b>' + data.msg + "</span><br/>");
   });
 
-  // pre-fill the text input box with whisper syntax for a whisper message
+  // Pre-fill the text input box with whisper syntax for a whisper message
   $('.friends').click(function() {
     var name = $(this).attr("value");
       console.log('name: ' + name);
