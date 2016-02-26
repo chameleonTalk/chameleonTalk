@@ -44,9 +44,9 @@ io.on('connection', function (socket) {
   socket.on('new message', function (data) {
       
       // if direct chat request is received, msg will be translated and passed to a selected person 
-      if(data.substr(0,4) === 'dir@'){
-          console.log('dir@ found');
-			var msg = data.substr(4);
+      if(data.substr(0,1) === '@'){
+          console.log('@ found');
+			var msg = data.substr(1);
 			var indAt = msg.indexOf('@');
             var indSpace = msg.indexOf(' ');
 			if(indSpace !== -1){

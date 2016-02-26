@@ -314,7 +314,7 @@ $(function() {
   // pre-fill the text input box with whisper syntax for a whisper message
   $('.friends').click(function() {
     var name = $(this).attr("value");
-    $(".inputMessage").val('dir@' + name + " ");
+    $(".inputMessage").val('@' + name + " ");
   });
 
   // returns full language name. takes is a language code.
@@ -335,7 +335,7 @@ $(function() {
         case "pl":
             data = 'Polish';
         default:
-            data = 'Not Specified';
+            data = 'English';
     }
       return data;
   }
