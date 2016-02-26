@@ -12,21 +12,31 @@ $(function() {
   var $usernameInput = $('.usernameInput'); // Input for username
   var $languageInput = $('.languageInput');
   var $messages = $('.messages'); // Messages area
+  var $chat = $('#chat'); // may not be necessary DEBUG
   var $inputMessage = $('.inputMessage'); // Input message input box
-
+  var $languageDropdown = $('#languageDropdown');
   var $loginPage = $('.login.page'); // The login page
   var $chatPage = $('.chat.page'); // The chatroom page
 
   // Prompt for setting a username
-  var username;
-  var language;
-  //var languages[];
+  var username, language, welcome;
   var connected = false;
   var typing = false;
   var lastTypingTime;
   var $currentInput = $usernameInput.focus();
 
   var socket = io();
+
+  function addParticipantsMessage (data) {
+    var message = '';
+    if (data.numUsers === 1) {
+      message += "there's 1 participant";
+    } else {
+      message += "there are " + data.numUsers + " participants";
+    }
+    log(message);
+  }
+
 
   function addParticipantsMessage (data) {
     var message = '';
@@ -46,13 +56,23 @@ $(function() {
 
     // If the username is valid
     if (username) {
-      $loginPage.fadeOut();
-      $chatPage.show();
-      $loginPage.off('click');
-      $currentInput = $inputMessage.focus();
-
       // Tell the server your username and preferred language
-	  socket.emit('add user', username, language);
+	  socket.emit('add user', username, language, function(data){
+
+        if(data){
+            $('.form').fadeOut();
+            $loginPage.fadeOut();
+            $('body').css("background-color", "white");
+            $chatPage.show();
+            $('.container2').fadeOut();
+
+            $loginPage.off('click');
+            $currentInput = $inputMessage.focus();
+        }else{
+           // console.log('username duplicate error triggered');
+            $('#logInError').html('<span class="error"><b>' + 'Sorry, that username is already taken.' + "</span><br/>");
+        }
+      });
     }
   }
 
@@ -194,7 +214,6 @@ $(function() {
   }
 
   // Keyboard events
-
   $window.keydown(function (event) {
     // Auto-focus the current input when a key is typed
     if (!(event.ctrlKey || event.metaKey || event.altKey)) {
@@ -203,6 +222,7 @@ $(function() {
     // When the client hits ENTER on their keyboard
     if (event.which === 13) {
       if (username) {
+          console.log("username exists");
         sendMessage();
         socket.emit('stop typing');
         typing = false;
@@ -233,8 +253,10 @@ $(function() {
   // Whenever the server emits 'login', log the login message
   socket.on('login', function (data) {
     connected = true;
+
     // Display the welcome message
-    var message = "Welcome to Socket.IO Chat – ";
+    var lang = getFullLanguageName(language);
+    var message = "Hi, " + username + "! You are currently in a public chat session - in "+ lang;
     log(message, {
       prepend: true
     });
@@ -268,4 +290,53 @@ $(function() {
   socket.on('stop typing', function (data) {
     removeChatTyping(data);
   });
+
+  // display currently logged participants' usernames on chat board
+  socket.on('participants', function(data){
+    var html='Online Users: ';
+     // console.log(html);
+    for(i = 0; i < data.length; i++){
+        html += data[i] + '&nbsp';
+    }
+    $('#participants').html(html);
+  });
+
+  // log a whisper message on chat board
+  socket.on('whisper', function(data){
+      $chat.append('<span class="whisper"><b>' + data.name + ': </b>' + data.msg + "</span><br/>");
+  });
+
+  // log an error message on chat board
+  socket.on('errorMsg', function(data){
+      $chat.append('<span class="error"><b>' + data.name + ': </b>' + data.msg + "</span><br/>");
+  });
+
+  // pre-fill the text input box with whisper syntax for a whisper message
+  $('.friends').click(function() {
+    var name = $(this).attr("value");
+    $(".inputMessage").val('dir@' + name + " ");
+  });
+
+  // returns full language name. takes is a language code.
+  function getFullLanguageName(data) {
+    switch(data) {
+        case "en":
+            data = 'English';
+            break;
+        case "es":
+            data = 'Spanish';
+            break;
+        case "de":
+            data = 'German';
+            break;
+        case "fr":
+            data = 'French';
+            break;
+        case "pl":
+            data = 'Polish';
+        default:
+            data = 'Not Specified';
+    }
+      return data;
+  }
 });
