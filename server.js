@@ -85,7 +85,7 @@ io.on('connection', function (socket) {
                         });
                     });
                 }
-        }
+            }
 		}
 
   });
@@ -109,7 +109,7 @@ io.on('connection', function (socket) {
         ++numUsers;
         addedUser = true;
         
-        console.log("user name: " + socket.username + "\t user name: " + socket.userLanguage + "\t socket id: " + socket.id );
+        console.log("user name: " + socket.username + "\t user language: " + socket.userLanguage + "\t socket id: " + socket.id );
         
         socket.emit('login', {
           numUsers: numUsers
@@ -118,7 +118,8 @@ io.on('connection', function (socket) {
         // echo globally (all clients) that a person has connected
         socket.broadcast.emit('user joined', {
           username: socket.username,
-          numUsers: numUsers
+          numUsers: numUsers,
+          userLanguage: socket.userLanguage
         });
     }
   });
@@ -151,9 +152,10 @@ io.on('connection', function (socket) {
     }
   })
 
+   // keep track of who is logged on
    function updateParticipants(){
-    // DEBUG
-      console.log("Who's on the list: "+Object.keys(participants));
+    console.log("Who's on the list: "+Object.keys(participants));
+    // send list of usernames 
 	io.sockets.emit('participants', Object.keys(participants));
   }
 });
