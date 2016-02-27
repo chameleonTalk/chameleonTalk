@@ -19,6 +19,7 @@ app.use(express.static(__dirname + '/public'));
 // Chatroom
 var numUsers = 0;
 var participants = {};
+var languages = {}  
 var users = [];
 
 // Translates source text into the targeted language.
@@ -44,9 +45,9 @@ io.on('connection', function (socket) {
   socket.on('new message', function (data) {
       
       // if direct chat request is received, msg will be translated and passed to a selected person 
-      if(data.substr(0,4) === 'dir@'){
-          console.log('dir@ found');
-			var msg = data.substr(4);
+      if(data.substr(0,1) === '@'){
+          console.log('@ found');
+			var msg = data.substr(1);
 			var indAt = msg.indexOf('@');
             var indSpace = msg.indexOf(' ');
 			if(indSpace !== -1){
@@ -108,6 +109,8 @@ io.on('connection', function (socket) {
         updateParticipants();
         ++numUsers;
         addedUser = true;
+
+    
         
         console.log("user name: " + socket.username + "\t user language: " + socket.userLanguage + "\t socket id: " + socket.id );
         
@@ -154,8 +157,38 @@ io.on('connection', function (socket) {
 
    // keep track of who is logged on
    function updateParticipants(){
-    console.log("Who's on the list: "+Object.keys(participants));
+        console.log("obj type: "+ typeof(participants));
+       users = [];
+       for(key in participants){
+           var thisSocket = participants[key];
+           console.log(' '+thisSocket.username + ' ' + thisSocket.userLanguage );
+            users.push(          
+            {username: thisSocket.username,
+          userLanguage: thisSocket.userLanguage
+            } );
+       }
     // send list of usernames 
 	io.sockets.emit('participants', Object.keys(participants));
+       io.sockets.emit('participants', users);
+    
   }
+    
+     // keep track of who is logged on
+   function updateUsers(){
+        console.log("obj type: "+ typeof(participants));
+       users = [];
+       for(key in participants){
+           var thisSocket = participants[key];
+           console.log(' '+thisSocket.username + ' ' + thisSocket.userLanguage );
+            users.push(          
+            {username: thisSocket.username,
+          userLanguage: thisSocket.userLanguage
+            } );
+       }
+    // send list of usernames 
+	//io.sockets.emit('participants', Object.keys(participants));
+       io.sockets.emit('users', users);
+    
+  }
+
 });

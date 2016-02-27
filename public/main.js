@@ -19,7 +19,7 @@ $(function() {
   var $chatPage = $('.chat.page'); // The chatroom page
 
   // Prompt for setting a username
-  var username, language, welcome;
+  var username, language, welcome, tempLang;
   var connected = false;
   var typing = false;
   var lastTypingTime;
@@ -293,10 +293,13 @@ $(function() {
 
   // Display currently logged participants' usernames on chat board
   socket.on('participants', function(data){
-    var html='';      
+    var html='';     
+      
     for(i = 0; i < data.length; i++){
-        html += '<button type=\"submit\" class=\"btn btn-default btn-block active friends\" value=\"'+ data[i] +'\">'+data[i]+'</button><br>';
-    }  
+        tempLang=getFullLanguageName(data[i].userLanguage);
+        html += '<button type=\"submit\" class=\"btn btn-default btn-block active friends\" value=\"'+ data[i].username +'\">'+data[i].username+' ('+tempLang+')</button><br>';
+    } 
+      
     $('.container').html(html);
   });
 
