@@ -108,9 +108,7 @@ io.on('connection', function (socket) {
         participants[socket.username]=socket;
         updateParticipants();
         ++numUsers;
-        addedUser = true;
-
-    
+        addedUser = true;    
         
         console.log("user name: " + socket.username + "\t user language: " + socket.userLanguage + "\t socket id: " + socket.id );
         
@@ -185,10 +183,8 @@ io.on('connection', function (socket) {
           userLanguage: thisSocket.userLanguage
             } );
        }
-    // send list of usernames 
-	//io.sockets.emit('participants', Object.keys(participants));
-       io.sockets.emit('users', users);
-    
+    // send list of users
+       io.sockets.emit('users', users);    
   }
 
 });

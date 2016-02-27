@@ -256,7 +256,7 @@ $(function() {
 
     // Display the welcome message
     var lang = getFullLanguageName(language);
-    var message = "Hi, " + username + "! You are currently in a public chat session - in "+ lang;
+    var message = "Hi, " + username + "! You are currently in a public chat session - Displayed in "+ lang;
     log(message, {
       prepend: true
     });
