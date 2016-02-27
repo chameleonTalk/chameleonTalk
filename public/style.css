@@ -230,7 +230,7 @@ ul {
 
 
 .overlap{
-    top: 410px;
+    top: 60%;
 position: absolute;
 /*left: 30px;*/
     z-index: 5;
