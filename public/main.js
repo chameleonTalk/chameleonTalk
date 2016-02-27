@@ -30,9 +30,9 @@ $(function() {
   function addParticipantsMessage (data) {
     var message = '';
     if (data.numUsers === 1) {
-      message += "there's 1 participant";
+      message += "there is 1 participant.";
     } else {
-      message += "there are " + data.numUsers + " participants";
+      message += "there are " + data.numUsers + " participants.";
     }
     log(message);
   }
@@ -256,7 +256,7 @@ $(function() {
 
     // Display the welcome message
     var lang = getFullLanguageName(language);
-    var message = "Hi, " + username + "! You are currently in a public chat session - in "+ lang;
+    var message = "Hi, " + username + "! You are currently in a public chat session.";
     log(message, {
       prepend: true
     });
@@ -270,7 +270,7 @@ $(function() {
 
   // Whenever the server emits 'user joined', log it in the chat body
   socket.on('user joined', function (data) {
-    log(data.username + ' joined');
+    log(data.username + ' joined.');
     addParticipantsMessage(data);
   });
 
@@ -293,13 +293,13 @@ $(function() {
 
   // Display currently logged participants' usernames on chat board
   socket.on('participants', function(data){
-    var html='';     
-      
+    var html='';
+
     for(i = 0; i < data.length; i++){
         tempLang=getFullLanguageName(data[i].userLanguage);
         html += '<button type=\"submit\" class=\"btn btn-default btn-block active friends\" value=\"'+ data[i].username +'\">'+data[i].username+' ('+tempLang+')</button><br>';
-    } 
-      
+    }
+
     $('.container').html(html);
   });
 
@@ -312,7 +312,7 @@ $(function() {
   socket.on('errorMsg', function(data){
       $chat.append('<span class="error"><b>' + data.name + ': </b>' + data.msg + "</span><br/>");
   });
-    
+
   // Returns full language name. takes is a language code.
   function getFullLanguageName(data) {
     switch(data) {
@@ -339,5 +339,5 @@ $(function() {
   // Pre-fill the text input box with whisper syntax for a whisper message
     $(".container").on("click", "button.friends", function(){
          $(".inputMessage").val('@' + $(this).val() + ' ');
-    });     
+    });
 });
