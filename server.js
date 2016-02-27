@@ -19,6 +19,7 @@ app.use(express.static(__dirname + '/public'));
 // chatroom
 var numUsers = 0;
 var participants = {};
+var languages = {}  
 var users = [];
 
 // translates source text into the targeted language.
@@ -108,6 +109,8 @@ io.on('connection', function (socket) {
         updateParticipants();
         ++numUsers;
         addedUser = true;
+
+    
         
         console.log("user name: " + socket.username + "\t user language: " + socket.userLanguage + "\t socket id: " + socket.id );
         
@@ -154,8 +157,38 @@ io.on('connection', function (socket) {
 
    // keep track of who is logged on
    function updateParticipants(){
-    console.log("Who's on the list: "+Object.keys(participants));
+        console.log("obj type: "+ typeof(participants));
+       users = [];
+       for(key in participants){
+           var thisSocket = participants[key];
+           console.log(' '+thisSocket.username + ' ' + thisSocket.userLanguage );
+            users.push(          
+            {username: thisSocket.username,
+          userLanguage: thisSocket.userLanguage
+            } );
+       }
     // send list of usernames 
 	io.sockets.emit('participants', Object.keys(participants));
+       io.sockets.emit('participants', users);
+    
   }
+    
+     // keep track of who is logged on
+   function updateUsers(){
+        console.log("obj type: "+ typeof(participants));
+       users = [];
+       for(key in participants){
+           var thisSocket = participants[key];
+           console.log(' '+thisSocket.username + ' ' + thisSocket.userLanguage );
+            users.push(          
+            {username: thisSocket.username,
+          userLanguage: thisSocket.userLanguage
+            } );
+       }
+    // send list of usernames 
+	//io.sockets.emit('participants', Object.keys(participants));
+       io.sockets.emit('users', users);
+    
+  }
+
 });
