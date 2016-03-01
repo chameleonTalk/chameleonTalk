@@ -48,7 +48,7 @@ io.on('connection', function (socket) {
 			if(indSpace !== -1){
 				var name = msg.substring(indAt + 1, indSpace);
 				var msg = msg.substring(indSpace + 1);
-				if(name in participants){
+				if(name in participants) {
                     doTranslation(participants[name].userLanguage, msg, socket, function (connectedSocket, translatedText) {
                         participants[name].emit('whisper', {
                             msg: translatedText,
@@ -78,102 +78,97 @@ io.on('connection', function (socket) {
                 }
             }
 		}
-
-  });
-
-  // when the client emits 'add user', this listens and executes
-  socket.on('add user', function (username, language, callback) {
-
-    if (addedUser) return;
-
-    if(username in participants) {
-		callback(false);
-	} else{
-		callback(true);
-
-        // we store the username in the socket session for this client
-        socket.username = username;
-        socket.userLanguage = language;
-        participants[socket.username]=socket;
-        updateParticipants();
-        ++numUsers;
-        addedUser = true;
-
-        console.log("user name: " + socket.username + "\t user language: " + socket.userLanguage + "\t socket id: " + socket.id );
-
-        socket.emit('login', {
-          numUsers: numUsers
-        });
-
-        // echo globally (all clients) that a person has connected
-        socket.broadcast.emit('user joined', {
-          username: socket.username,
-          numUsers: numUsers,
-          userLanguage: socket.userLanguage
-        });
-    }
-  });
-
-  // when the client emits 'typing', we broadcast it to others
-  socket.on('typing', function () {
-    socket.broadcast.emit('typing', {
-      username: socket.username
     });
-  });
 
-  // when the client emits 'stop typing', we broadcast it to others
-  socket.on('stop typing', function () {
-    socket.broadcast.emit('stop typing', {
-      username: socket.username
+    // when the client emits 'add user', this listens and executes
+    socket.on('add user', function (username, language, callback) {
+        if (addedUser) return;
+
+        if(username in participants) {
+    		callback(false);
+    	} else {
+    		callback(true);
+            // we store the username in the socket session for this client
+            socket.username = username;
+            socket.userLanguage = language;
+            participants[socket.username]=socket;
+            updateParticipants();
+            ++numUsers;
+            addedUser = true;
+
+            console.log("user name: " + socket.username + "\t user language: " + socket.userLanguage + "\t socket id: " + socket.id );
+
+            socket.emit('login', {
+                numUsers: numUsers
+            });
+
+            // echo globally (all clients) that a person has connected
+            socket.broadcast.emit('user joined', {
+                username: socket.username,
+                numUsers: numUsers,
+                userLanguage: socket.userLanguage
+            });
+        }
     });
-  });
 
-  // when the user disconnects.. perform this
-  socket.on('disconnect', function () {
-    if (addedUser) {
-      --numUsers;
-		delete participants[socket.username];
-		updateParticipants();
-      // echo globally that this client has left
-      socket.broadcast.emit('user left', {
-        username: socket.username,
-        numUsers: numUsers
-      });
-    }
-  })
+    // when the client emits 'typing', we broadcast it to others
+    socket.on('typing', function () {
+        socket.broadcast.emit('typing', {
+            username: socket.username
+        });
+    });
+
+    // when the client emits 'stop typing', we broadcast it to others
+    socket.on('stop typing', function () {
+        socket.broadcast.emit('stop typing', {
+            username: socket.username
+        });
+    });
+
+    // when the user disconnects.. perform this
+    socket.on('disconnect', function () {
+        if (addedUser) {
+            --numUsers;
+            delete participants[socket.username];
+            updateParticipants();
+            // echo globally that this client has left
+            socket.broadcast.emit('user left', {
+                username: socket.username,
+                numUsers: numUsers
+            });
+        }
+    });
 
    // keep track of who is logged on
-   function updateParticipants(){
-        console.log("obj type: "+ typeof(participants));
+   function updateParticipants() {
+       console.log("obj type: "+ typeof(participants));
        users = [];
-       for(key in participants){
+       for(key in participants) {
            var thisSocket = participants[key];
            console.log(' '+thisSocket.username + ' ' + thisSocket.userLanguage );
-            users.push(
-            {username: thisSocket.username,
-          userLanguage: thisSocket.userLanguage
-            } );
-       }
-    // send list of usernames
-	io.sockets.emit('participants', Object.keys(participants));
-       io.sockets.emit('participants', users);
-
-  }
+           users.push(
+               {username: thisSocket.username,
+                userLanguage: thisSocket.userLanguage
+            });
+        }
+        // send list of usernames
+    	io.sockets.emit('participants', Object.keys(participants));
+        io.sockets.emit('participants', users);
+    }
 
      // keep track of who is logged on
-   function updateUsers(){
-        console.log("obj type: "+ typeof(participants));
-       users = [];
-       for(key in participants){
-           var thisSocket = participants[key];
-           console.log(' '+thisSocket.username + ' ' + thisSocket.userLanguage );
-            users.push(
-            {username: thisSocket.username,
-          userLanguage: thisSocket.userLanguage
-            } );
-       }
-    // send list of users
-       io.sockets.emit('users', users);
-  }
-
+     function updateUsers() {
+         console.log("obj type: "+ typeof(participants));
+         users = [];
+         for(key in participants) {
+             var thisSocket = participants[key];
+             console.log(' '+thisSocket.username + ' ' + thisSocket.userLanguage );
+             users.push(
+                 {username: thisSocket.username,
+                  userLanguage: thisSocket.userLanguage
+             });
+         }
+        // send list of users
+        io.sockets.emit('users', users);
+    }
 });
