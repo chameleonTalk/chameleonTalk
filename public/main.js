@@ -293,13 +293,13 @@ $(function() {
 
   // Display currently logged participants' usernames on chat board
   socket.on('participants', function(data){
-    var html='';     
-      
+    var html='';
+
     for(i = 0; i < data.length; i++){
         tempLang=getFullLanguageName(data[i].userLanguage);
         html += '<button type=\"submit\" class=\"btn btn-default btn-block active friends\" value=\"'+ data[i].username +'\">'+data[i].username+' ('+tempLang+')</button><br>';
-    } 
-      
+    }
+
     $('.container').html(html);
   });
 
@@ -312,7 +312,7 @@ $(function() {
   socket.on('errorMsg', function(data){
       $chat.append('<span class="error"><b>' + data.name + ': </b>' + data.msg + "</span><br/>");
   });
-    
+
   // Returns full language name. takes is a language code.
   function getFullLanguageName(data) {
     switch(data) {
@@ -339,5 +339,5 @@ $(function() {
   // Pre-fill the text input box with whisper syntax for a whisper message
     $(".container").on("click", "button.friends", function(){
          $(".inputMessage").val('@' + $(this).val() + ' ');
-    });     
+    });
 });
