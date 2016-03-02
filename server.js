@@ -46,22 +46,39 @@ io.on('connection', function (socket) {
 			var indAt = msg.indexOf('@');
             var indSpace = msg.indexOf(' ');
 			if(indSpace !== -1){
-				var name = msg.substring(indAt + 1, indSpace);
+				var name = msg.substring(indAt + 1, indSpace);                
 				var msg = msg.substring(indSpace + 1);
 				if(name in participants) {
-                    doTranslation(participants[name].userLanguage, msg, socket, function (connectedSocket, translatedText) {
-                        participants[name].emit('whisper', {
-                            msg: translatedText,
+                    if(msg != ' ' && msg != ''){                        
+                        doTranslation(participants[name].userLanguage, msg, socket, function (connectedSocket, translatedText) {
+                            participants[name].emit('whisper', {
+                                msg: translatedText,
+                                name: socket.username,
+                            });
+                        });
+                    }else{
+                    // No message entry received. Send an error log request to client side 
+                    console.log('no message entry err 2');
+                        socket.emit('errorMsg', {
+                            msg: 'You did not enter any message.',
                             name: socket.username,
                         });
-                    });
-                } else {
-                    //callback('Error!  Did you enter a valid user? Try again!');
-                    console.log('invalid user specified on whisper req');
-				}
+                    }
+                }else{
+                    // Wrong username specified. Send an error log request to client side 
+                    console.log('invalid user specified on whisper req err 1');
+                    socket.emit('errorMsg', {
+                        msg: 'You entered a wrong username.',
+                        name: socket.username,
+                    });             
+                }
 			} else {
-				//callback('Error!  Did you enter a message for your whisper? Try again!');
-                console.log('invalid message! (whisper req)');
+				// Wrong username specified. Send an error log request to client side 
+                console.log('invalid user specified on whisper req err 3');
+                    socket.emit('errorMsg', {
+                        msg: 'You entered a wrong username.',
+                        name: socket.username,
+                    });
 			}
 		} else { // otherwise messages are sent to everyone
         // Translates data (original text). Once response is received, emits.
