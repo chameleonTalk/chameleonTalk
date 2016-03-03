@@ -130,7 +130,7 @@ ul {
 .chatArea {
     height: 100%;
     padding-bottom: 60px;
-    width: 85%;
+    width: 80%;
     float: right;
 }
 
@@ -165,7 +165,7 @@ ul {
     padding-left: 10px;
     position: absolute;
     right: 0;
-    width: 85%;
+    width: 80%;
     float: right;
 }
 
@@ -175,7 +175,7 @@ ul {
     padding: 7px;
     border: 10px solid #000;
     height: 100%;
-    width: 15%;
+    width: 20%;
     background-color: black;
 }
 
@@ -223,7 +223,7 @@ ul {
 }
 
 .container3 {
-    width:30%;
+    width: 250px;
     margin: auto;
     padding-top: 1%;
 }
@@ -239,4 +239,12 @@ ul {
 .btn .btn-info .btn-block {
     position: absolute;
     bottom: 0;
+}
+
+.rainbow {
+  background-image: -webkit-gradient( linear, left top, right top, color-stop(0, #f22), color-stop(0.15, #f2f), color-stop(0.3, #22f), color-stop(0.45, #2ff), color-stop(0.6, #2f2),color-stop(0.75, #2f2), color-stop(0.9, #ff2), color-stop(1, #f22) );
+  background-image: gradient( linear, left top, right top, color-stop(0, #f22), color-stop(0.15, #f2f), color-stop(0.3, #22f), color-stop(0.45, #2ff), color-stop(0.6, #2f2),color-stop(0.75, #2f2), color-stop(0.9, #ff2), color-stop(1, #f22) );
+  color:transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
 }
