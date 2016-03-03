@@ -30,19 +30,9 @@ $(function() {
     function addParticipantsMessage (data) {
         var message = '';
         if (data.numUsers === 1) {
-            message += "there's 1 participant";
+            message += username + " is online.";
         } else {
-            message += "there are " + data.numUsers + " participants";
-        }
-        log(message);
-    }
-
-    function addParticipantsMessage (data) {
-        var message = '';
-        if (data.numUsers === 1) {
-            message += "there's 1 participant";
-        } else {
-            message += "there are " + data.numUsers + " participants";
+            message += username + " is online.";
         }
         log(message);
     }
@@ -294,7 +284,7 @@ $(function() {
 
         for(i = 0; i < data.length; i++) {
             tempLang=getFullLanguageName(data[i].userLanguage);
-            html += '<button type=\"submit\" class=\"btn btn-default btn-block active friends\" value=\"'+ data[i].username +'\">'+data[i].username+' ('+tempLang+')</button><br>';
+            html += '<button type=\"submit\" class=\"btn btn-default btn-block active friends\" value=\"'+ data[i].username +'\">' + '<span class="glyphicon glyphicon-user"></span> ' + data[i].username + ' ('+tempLang+')</button><br>';
         }
 
         $('.container').html(html);
