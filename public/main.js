@@ -317,6 +317,10 @@ $(function() {
             break;
             case "pl":
                 data = 'Polish';
+            break;
+            case "tl":
+                data = 'Tagalog';
+            break;
             default:
                 data = 'Not Specified';
         }
