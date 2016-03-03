@@ -50,6 +50,8 @@ io.on('connection', function (socket) {
 				var msg = msg.substring(indSpace + 1);
 				if(name in participants) {
                     if(msg != ' ' && msg != ''){                        
+                        //DEBUG
+                        console.log('now the message [ '+msg+' ]' + 'will be translated...')
                         doTranslation(participants[name].userLanguage, msg, socket, function (connectedSocket, translatedText) {
                             participants[name].emit('whisper', {
                                 msg: translatedText,
@@ -58,14 +60,14 @@ io.on('connection', function (socket) {
                         });
                     }else{
                     // No message entry received. Send an error log request to client side 
-                    console.log('no message entry err 2');
+                        console.log('no message entry err 2');
                         socket.emit('errorMsg', {
                             msg: 'You did not enter any message.',
                             name: socket.username,
                         });
                     }
                 }else{
-                    // Wrong username specified. Send an error log request to client side 
+                    // Wrong username specified. Send an error log request to client side (the space between username ) 
                     console.log('invalid user specified on whisper req err 1');
                     socket.emit('errorMsg', {
                         msg: 'You entered a wrong username.',
@@ -76,7 +78,7 @@ io.on('connection', function (socket) {
 				// Wrong username specified. Send an error log request to client side 
                 console.log('invalid user specified on whisper req err 3');
                     socket.emit('errorMsg', {
-                        msg: 'You entered a wrong username.',
+                        msg: 'Please add a space betwee \'username\' and your message.',
                         name: socket.username,
                     });
 			}
