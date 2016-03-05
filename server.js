@@ -59,29 +59,45 @@ io.on('connection', function (socket) {
                             });
                         });
                     }else{
-                    // No message entry received. Send an error log request to client side 
+                        // No message entry received. Send an error log request to client side 
                         console.log('no message entry err 2');
-                        socket.emit('errorMsg', {
-                            msg: 'You did not enter any message.',
-                            name: socket.username,
-                        });
+                        msg = 'You did not enter any message.';
+                        if(msg === 'You did not enter any message.'){
+                            doTranslation(socket.userLanguage, msg, socket, function (connectedSocket, translatedText) {
+                                socket.emit('errorMsg', {
+                                    msg: translatedText,
+                                    name: socket.username,
+                                });
+                            }); 
+                        }
                     }
                 }else{
-                    // Wrong username specified. Send an error log request to client side (the space between username ) 
-                    console.log('invalid user specified on whisper req err 1');
-                    socket.emit('errorMsg', {
-                        msg: 'You entered a wrong username.',
-                        name: socket.username,
-                    });             
+                     // Wrong username specified. Send an error log request to client side (the space between username ) 
+                     console.log('invalid user specified on whisper req err 1');
+                     msg = 'That user is not online.';
+                    if(msg === 'That user is not online.'){
+                        doTranslation(socket.userLanguage, msg, socket, function (connectedSocket, translatedText) {
+                            socket.emit('errorMsg', {
+                            msg: translatedText,
+                            name: socket.username,
+                            });
+                        });
+                    }
                 }
 			} else {
 				// Wrong username specified. Send an error log request to client side 
-                console.log('invalid user specified on whisper req err 3');
-                    socket.emit('errorMsg', {
-                        msg: 'Please add a space betwee \'username\' and your message.',
-                        name: socket.username,
+                console.log('no space between username and msg err 3');
+                
+                msg = 'Please enter a space between the username and message.';
+                if(msg === 'Please enter a space between the username and message.'){
+                    doTranslation(socket.userLanguage, msg, socket, function (connectedSocket, translatedText) {
+                        socket.emit('errorMsg', {
+                            msg: translatedText,
+                            name: socket.username,
+                        });
                     });
-			}
+			     }
+            }
 		} else { // otherwise messages are sent to everyone
         // Translates data (original text). Once response is received, emits.
             for (key in io.sockets.connected) {

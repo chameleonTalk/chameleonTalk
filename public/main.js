@@ -297,7 +297,7 @@ $(function() {
 
     // Log an error message on chat board
     socket.on('errorMsg', function(data) {
-        $chat.append('<span class="error"><b>' + data.name + ': </b>' + data.msg + "</span><br/>");
+        $chat.append('<span class="error">' + data.msg + "</span><br/>");
     });
 
     // Returns full language name. takes is a language code.
