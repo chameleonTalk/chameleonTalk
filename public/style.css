@@ -158,17 +158,16 @@ ul {
 /* Input */
 
 .inputMessage {
+    display: inline-block;
     border: 10px solid #000;
     bottom: 0;
     height: 60px;
-    /*left: 0;*/
     outline: none;
     padding-left: 10px;
     position: absolute;
-    left: 320px;
     width: 100%;
     float: right;
-
+    padding-left: 330px;
 }
 
 .friendsList {
@@ -178,6 +177,7 @@ ul {
     height: 100%;
     width: 320px;
     background-color: black;
+    z-index: 4;
 }
 
 .dropdown {
