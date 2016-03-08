@@ -30,9 +30,9 @@ $(function() {
     function addParticipantsMessage (data) {
         var message = '';
         if (data.numUsers === 1) {
-            message += username + " is online.";
+            message += "there's 1 participant.";
         } else {
-            message += username + " is online.";
+            message += "there are " + data.numUsers + " participants.";
         }
         log(message);
     }
@@ -114,7 +114,7 @@ $(function() {
     // Adds the visual chat typing message
     function addChatTyping (data) {
         data.typing = true;
-        data.message = 'is typing';
+        data.message = 'is typing...';
         addChatMessage(data);
     }
 
@@ -255,15 +255,15 @@ $(function() {
         addChatMessage(data);
     });
 
-    // Whenever the server emits 'user joined', log it in the chat body
+    // Whenever the server emits 'user is online', log it in the chat body
     socket.on('user joined', function (data) {
-        log(data.username + ' joined');
+        log(data.username + ' is online.');
         addParticipantsMessage(data);
     });
 
-    // Whenever the server emits 'user left', log it in the chat body
+    // Whenever the server emits 'user is offline', log it in the chat body
     socket.on('user left', function (data) {
-        log(data.username + ' left');
+        log(data.username + ' is offline.');
         addParticipantsMessage(data);
         removeChatTyping(data);
     });
@@ -297,7 +297,7 @@ $(function() {
 
     // Log an error message on chat board
     socket.on('errorMsg', function(data) {
-        $chat.append('<span class="error"><b>' + data.name + ': </b>' + data.msg + "</span><br/>");
+        $chat.append('<span class="error">' + data.msg + "</span><br/>");
     });
 
     // Returns full language name. takes is a language code.
